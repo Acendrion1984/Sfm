@@ -1,0 +1,2432 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Prüfmittelüberwachung · Vorfälle & Themen · Multi-User</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #f5f5f7;
+            --bg-secondary: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --border-color: #cbd5e1;
+            --card-bg: #ffffff;
+            --header-gradient: linear-gradient(135deg, #003366 0%, #1a4d8c 100%);
+            --shadow-color: rgba(0,51,102,0.2);
+            --input-bg: #ffffff;
+            --hover-bg: #f1f5f9;
+            --btn-primary: #003366;
+            --btn-primary-hover: #002244;
+            --btn-success: #059669;
+            --btn-success-hover: #047857;
+            --btn-danger: #dc2626;
+            --btn-danger-hover: #b91c1c;
+            --btn-warning: #d97706;
+            --btn-warning-hover: #b45309;
+            --btn-reopen: #4f46e5;
+            --btn-reopen-hover: #4338ca;
+            --btn-add: #8b5cf6;
+            --btn-add-hover: #7c3aed;
+            --badge-category-bg: #dbeafe;
+            --badge-method-bg: #ede9fe;
+            --badge-open-bg: #bbf7d0;
+            --badge-closed-bg: #fecaca;
+            --badge-long-bg: #dbeafe;
+            --badge-short-bg: #fef3c7;
+            --badge-audit-bg: #fbcfe8;
+            --text-on-badge: #0f172a;
+            --kw-group-bg: #e2e8f0;
+            --tab-hover: #e2e8f0;
+            --user-tab-1: #e3f2fd;
+            --user-tab-2: #f3e5f5;
+            --user-tab-3: #e8f5e8;
+            --user-tab-4: #fff3e0;
+            --user-tab-5: #ffe0e0;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1e1e1e;
+            --text-primary: #ffffff;
+            --text-secondary: #e0e0e0;
+            --border-color: #4a4a4a;
+            --card-bg: #2a2a2a;
+            --header-gradient: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            --shadow-color: rgba(0,0,0,0.5);
+            --input-bg: #2d2d2d;
+            --hover-bg: #374151;
+            --btn-primary: #3b82f6;
+            --btn-primary-hover: #2563eb;
+            --btn-success: #10b981;
+            --btn-success-hover: #059669;
+            --btn-danger: #ef4444;
+            --btn-danger-hover: #dc2626;
+            --btn-warning: #f59e0b;
+            --btn-warning-hover: #d97706;
+            --btn-reopen: #6366f1;
+            --btn-reopen-hover: #4f46e5;
+            --btn-add: #a78bfa;
+            --btn-add-hover: #8b5cf6;
+            --badge-category-bg: #1e3a8a;
+            --badge-method-bg: #5b21b6;
+            --badge-open-bg: #065f46;
+            --badge-closed-bg: #991b1b;
+            --badge-long-bg: #1e3a8a;
+            --badge-short-bg: #92400e;
+            --badge-audit-bg: #9d174d;
+            --text-on-badge: #ffffff;
+            --kw-group-bg: #2d3748;
+            --tab-hover: #2d2d2d;
+            --user-tab-1: #1a237e;
+            --user-tab-2: #4a148c;
+            --user-tab-3: #1b5e20;
+            --user-tab-4: #bf360c;
+            --user-tab-5: #b71c1c;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .app-container { max-width: 1400px; margin: 0 auto; width: 100%; }
+
+        .theme-toggle {
+            position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+            background: var(--bg-secondary); border: 2px solid var(--border-color);
+            border-radius: 50px; padding: 12px; cursor: pointer;
+            box-shadow: 0 4px 12px var(--shadow-color); display: flex;
+            align-items: center; justify-content: center; transition: all 0.3s;
+            width: 50px; height: 50px;
+        }
+        .theme-toggle:hover { transform: scale(1.1); }
+        .theme-toggle i { font-size: 24px; color: var(--text-primary); }
+
+        .app-header {
+            background: var(--header-gradient); color: white; padding: 25px;
+            border-radius: 20px 20px 0 0; box-shadow: 0 4px 20px var(--shadow-color);
+        }
+        .app-header h1 { font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .app-header h1 i { font-size: 28px; }
+        .app-header .subtitle { margin-top: 8px; opacity: 0.9; font-size: 15px; }
+
+        .file-info-bar {
+            background: var(--kw-group-bg); padding: 15px 20px; border-radius: 12px;
+            margin: 20px 0; display: flex; align-items: center; gap: 15px;
+            flex-wrap: wrap; border: 2px solid var(--border-color);
+        }
+        .file-info { display: flex; align-items: center; gap: 10px; color: var(--text-primary); }
+        .file-info i { color: var(--btn-primary); font-size: 20px; }
+        .file-actions { display: flex; gap: 10px; margin-left: auto; flex-wrap: wrap; }
+
+        .btn-file {
+            background: var(--btn-primary); color: white; border: none;
+            padding: 10px 20px; font-size: 14px; border-radius: 8px; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 8px; font-weight: 600;
+        }
+        .btn-file:hover { background: var(--btn-primary-hover); }
+        .btn-file-success { background: var(--btn-success); }
+        .btn-file-success:hover { background: var(--btn-success-hover); }
+        .btn-file-warning { background: var(--btn-warning); }
+        .btn-file-warning:hover { background: var(--btn-warning-hover); }
+
+        .main-tab-navigation {
+            display: flex; gap: 5px; padding: 0 20px; background: var(--bg-secondary);
+            border-bottom: 2px solid var(--border-color); overflow-x: auto;
+            -webkit-overflow-scrolling: touch; scrollbar-width: none; white-space: nowrap; align-items: center;
+        }
+        .main-tab-navigation::-webkit-scrollbar { display: none; }
+
+        .main-tab-button {
+            padding: 15px 25px; background: none; border: none; font-size: 16px;
+            font-weight: 600; color: var(--text-secondary); cursor: pointer;
+            display: inline-flex; align-items: center; gap: 8px;
+            border-bottom: 3px solid transparent; transition: all 0.2s; flex-shrink: 0;
+        }
+        .main-tab-button:hover { color: var(--text-primary); background: var(--tab-hover); }
+        .main-tab-button.active { color: var(--btn-primary); border-bottom-color: var(--btn-primary); }
+        .main-tab-button.user-tab { border-radius: 8px 8px 0 0; margin: 0 2px; }
+
+        .add-tab-button {
+            padding: 12px 20px; background: var(--btn-add); color: white; border: none;
+            border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 8px; margin-left: 10px; flex-shrink: 0;
+        }
+        .add-tab-button:hover { background: var(--btn-add-hover); }
+
+        .main-tab-content {
+            display: none; background: var(--bg-secondary); border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 30px var(--shadow-color); padding: 30px;
+        }
+        .main-tab-content.active { display: block; }
+
+        .sub-tab-navigation {
+            display: flex; gap: 10px; margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color); align-items: center; flex-wrap: wrap;
+        }
+        .sub-tab-button {
+            padding: 12px 20px; background: none; border: none; font-size: 15px;
+            font-weight: 600; color: var(--text-secondary); cursor: pointer;
+            display: inline-flex; align-items: center; gap: 8px;
+            border-bottom: 3px solid transparent; transition: all 0.2s;
+        }
+        .sub-tab-button.active { color: var(--btn-primary); border-bottom-color: var(--btn-primary); }
+        .sub-tab-button:hover { color: var(--text-primary); }
+
+        .sub-tab-content { display: none; }
+        .sub-tab-content.active { display: block; }
+
+        .tab-user-header {
+            display: flex; align-items: center; gap: 15px; padding: 15px;
+            background: var(--hover-bg); border-radius: 12px; margin-bottom: 20px;
+        }
+        .user-avatar {
+            width: 50px; height: 50px; border-radius: 50%; background: var(--btn-primary);
+            display: flex; align-items: center; justify-content: center; color: white;
+            font-size: 20px; font-weight: bold;
+        }
+        .user-info { flex: 1; }
+        .user-name { font-size: 18px; font-weight: 600; color: var(--text-primary); }
+        .user-file { font-size: 14px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+        .lock-status {
+            display: flex; align-items: center; gap: 5px; font-size: 13px;
+            padding: 4px 10px; border-radius: 20px;
+        }
+        .lock-status.editable { background: var(--badge-open-bg); color: var(--text-on-badge); }
+        .lock-status.readonly { background: var(--badge-closed-bg); color: var(--text-on-badge); }
+
+        /* FORMS */
+        .form-section {
+            background: var(--hover-bg); border-radius: 16px; padding: 25px; margin-bottom: 25px;
+            border: 2px solid var(--border-color);
+        }
+        .form-section h3 { font-size: 18px; color: var(--btn-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        .form-row { display: flex; gap: 20px; margin-bottom: 16px; flex-wrap: wrap; }
+        .form-group { flex: 1 1 calc(50% - 10px); min-width: 250px; margin-bottom: 16px; }
+        .form-group.full-width { flex: 0 0 100%; width: 100%; }
+
+        label {
+            display: block; margin-bottom: 8px; color: var(--text-primary);
+            font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 0.3px;
+        }
+        label i { margin-right: 6px; color: var(--btn-primary); font-size: 14px; }
+
+        input, select, textarea {
+            width: 100%; padding: 14px; border: 2px solid var(--border-color);
+            border-radius: 12px; font-size: 16px; transition: all 0.2s;
+            background: var(--input-bg); color: var(--text-primary); font-family: inherit;
+            -webkit-appearance: none; appearance: none;
+        }
+        input:disabled, select:disabled, textarea:disabled { opacity: 0.6; cursor: not-allowed; background: var(--hover-bg); }
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23334155' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat; background-position: right 16px center;
+            background-size: 18px; padding-right: 45px;
+        }
+        [data-theme="dark"] select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none; border-color: var(--btn-primary);
+            box-shadow: 0 0 0 4px rgba(59,130,246,0.3);
+        }
+        textarea { resize: vertical; min-height: 120px; }
+
+        .btn {
+            padding: 14px 25px; border: none; border-radius: 12px; font-size: 16px;
+            font-weight: 600; cursor: pointer; transition: all 0.2s;
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            background: var(--bg-secondary); border: 2px solid var(--border-color);
+            width: 100%; -webkit-tap-highlight-color: transparent; color: var(--text-primary);
+        }
+        .btn-primary { background: var(--btn-primary); color: white; border: none; }
+        .btn-primary:hover { background: var(--btn-primary-hover); }
+        .btn-success { background: var(--btn-success); color: white; border: none; }
+        .btn-success:hover { background: var(--btn-success-hover); }
+        .btn-warning { background: var(--btn-warning); color: white; border: none; }
+        .btn-warning:hover { background: var(--btn-warning-hover); }
+        .btn-danger { background: var(--btn-danger); color: white; border: none; }
+        .btn-danger:hover { background: var(--btn-danger-hover); }
+        .btn-reopen { background: var(--btn-reopen); color: white; border: none; }
+        .btn-reopen:hover { background: var(--btn-reopen-hover); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-upload {
+            background: var(--hover-bg); border: 2px dashed var(--border-color);
+            justify-content: center; color: var(--text-primary); padding: 20px;
+        }
+        .btn-upload:hover { background: var(--bg-secondary); }
+
+        .form-actions { display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap; }
+        .form-actions .btn { flex: 1; min-width: 150px; }
+
+        .image-preview-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px; margin-top: 15px;
+        }
+        .image-preview-item {
+            position: relative; border-radius: 10px; overflow: hidden;
+            aspect-ratio: 1; background: var(--hover-bg); border: 2px solid var(--border-color);
+        }
+        .image-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+        .image-preview-item .remove-image {
+            position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.7);
+            border: none; border-radius: 50%; width: 26px; height: 26px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; color: white;
+            font-weight: bold; font-size: 18px; padding: 0; line-height: 1;
+        }
+
+        /* INCIDENT CARDS */
+        .list-header { margin-bottom: 25px; }
+        .list-title { font-size: 22px; font-weight: 600; color: var(--text-primary); margin-bottom: 20px; }
+        .filter-section { display: flex; flex-direction: row; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; }
+        .search-box {
+            flex: 2; min-width: 250px; display: flex; align-items: center;
+            background: var(--input-bg); border: 2px solid var(--border-color); border-radius: 12px; padding: 0 16px;
+        }
+        .search-box i { color: var(--text-secondary); }
+        .search-box input { border: none; padding: 14px 10px; width: 100%; outline: none; font-size: 16px; background: transparent; color: var(--text-primary); }
+
+        .incident-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 20px; }
+        .incident-card {
+            background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 16px;
+            padding: 20px; transition: all 0.2s;
+        }
+        .incident-card:hover { border-color: var(--btn-primary); transform: translateY(-2px); box-shadow: 0 10px 25px var(--shadow-color); }
+
+        .card-header { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+        .card-badges { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .badge {
+            padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+            display: inline-flex; align-items: center; gap: 5px; color: var(--text-on-badge);
+        }
+        .badge-category { background: var(--badge-category-bg); }
+        .badge-method { background: var(--badge-method-bg); }
+        .badge-status { background: var(--badge-open-bg); }
+        .badge-status.closed { background: var(--badge-closed-bg); }
+        .badge-long { background: var(--badge-long-bg); }
+        .badge-short { background: var(--badge-short-bg); }
+        .badge-audit { background: var(--badge-audit-bg); }
+        .card-date { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 5px; }
+
+        .card-content { margin-bottom: 15px; cursor: pointer; }
+        .info-row { display: flex; align-items: flex-start; gap: 10px; font-size: 15px; margin-bottom: 8px; flex-wrap: wrap; }
+        .info-label { font-weight: 600; color: var(--text-secondary); min-width: 100px; font-size: 14px; }
+        .info-value { color: var(--text-primary); flex: 1; font-size: 14px; white-space: pre-line; }
+
+        .card-actions {
+            display: flex; gap: 8px; margin-top: 15px; padding-top: 15px;
+            border-top: 1px solid var(--border-color); flex-wrap: wrap;
+        }
+        .action-button {
+            flex: 1; min-width: 70px; padding: 10px 8px; border: none; border-radius: 8px;
+            font-size: 12px; font-weight: 600; cursor: pointer;
+            display: inline-flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.2s;
+        }
+        .action-button.view { background: var(--hover-bg); color: var(--text-primary); }
+        .action-button.edit { background: var(--btn-warning); color: white; }
+        .action-button.close-btn { background: var(--btn-success); color: white; }
+        .action-button.reopen { background: var(--btn-reopen); color: white; }
+        .action-button.delete { background: var(--btn-danger); color: white; }
+        .action-button:hover { opacity: 0.9; transform: scale(0.98); }
+        .action-button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* PROGRESS */
+        .progress-bar { height: 10px; background: var(--border-color); border-radius: 10px; overflow: hidden; margin-top: 10px; }
+        .progress-fill { height: 100%; background: var(--btn-primary); border-radius: 10px; transition: width 0.3s; }
+
+        /* MODALS */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center;
+            align-items: center; padding: 20px;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: var(--bg-secondary); border-radius: 24px; max-width: 900px;
+            width: 100%; max-height: 92vh; overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+        .modal-header {
+            padding: 25px; border-bottom: 2px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; background: var(--bg-secondary); z-index: 10;
+        }
+        .modal-header h2 { font-size: 22px; color: var(--text-primary); }
+        .close-modal { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--text-secondary); padding: 5px 15px; }
+        .close-modal:hover { color: var(--btn-primary); }
+        .modal-body { padding: 25px; }
+        .modal-footer {
+            padding: 25px; border-top: 2px solid var(--border-color); display: flex;
+            gap: 15px; position: sticky; bottom: 0; background: var(--bg-secondary); flex-wrap: wrap;
+        }
+        .modal-footer .btn { flex: 1; min-width: 120px; }
+
+        .detail-section { margin-bottom: 25px; }
+        .detail-section h3 { font-size: 18px; color: var(--btn-primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
+        .detail-item { background: var(--hover-bg); padding: 15px; border-radius: 12px; }
+        .detail-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 5px; text-transform: uppercase; }
+        .detail-value { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+
+        .image-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; margin-top: 15px; }
+        .gallery-image { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 12px; cursor: pointer; border: 2px solid var(--border-color); }
+        .gallery-image:hover { border-color: var(--btn-primary); }
+
+        .confirm-modal {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85); display: none; justify-content: center;
+            align-items: center; z-index: 3000; padding: 20px;
+        }
+        .confirm-modal.active { display: flex; }
+        .confirm-content { background: var(--bg-secondary); border-radius: 24px; padding: 30px; max-width: 400px; width: 100%; text-align: center; }
+        .confirm-content h3 { font-size: 22px; color: var(--text-primary); margin-bottom: 15px; }
+        .confirm-content p { color: var(--text-secondary); margin-bottom: 25px; font-size: 16px; }
+        .confirm-buttons { display: flex; gap: 15px; }
+        .confirm-buttons .btn { flex: 1; }
+
+        .password-modal {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85); display: none; justify-content: center;
+            align-items: center; z-index: 4000; padding: 20px;
+        }
+        .password-modal.active { display: flex; }
+        .password-content { background: var(--bg-secondary); border-radius: 24px; padding: 30px; max-width: 400px; width: 100%; }
+        .password-content h3 { font-size: 22px; color: var(--text-primary); margin-bottom: 15px; }
+        .password-content p { color: var(--text-secondary); margin-bottom: 20px; font-size: 14px; }
+        .password-input { width: 100%; padding: 15px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 16px; margin-bottom: 20px; background: var(--input-bg); color: var(--text-primary); }
+        .password-buttons { display: flex; gap: 15px; }
+        .password-error { color: var(--btn-danger); font-size: 14px; margin-top: 10px; display: none; }
+        .password-error.show { display: block; }
+
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8); display: none; justify-content: center;
+            align-items: center; z-index: 2000;
+        }
+        .loading-spinner {
+            width: 50px; height: 50px; border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--btn-primary); border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .success-message, .error-message {
+            padding: 15px 20px; border-radius: 12px; margin-bottom: 20px;
+            display: none; align-items: center; gap: 12px; font-size: 16px; font-weight: 500;
+        }
+        .success-message { background: var(--btn-success); color: white; }
+        .error-message { background: var(--btn-danger); color: white; }
+
+        .kw-group { margin-bottom: 30px; }
+        .kw-header {
+            background: var(--kw-group-bg); padding: 15px 20px; border-radius: 12px;
+            margin-bottom: 15px; display: flex; align-items: center; gap: 10px;
+            border-left: 5px solid var(--btn-primary); color: var(--text-primary); font-weight: 600; font-size: 1.2em;
+        }
+        .kw-header i { color: var(--btn-primary); font-size: 1.3em; }
+        .kw-count { margin-left: auto; background: var(--bg-secondary); padding: 5px 15px; border-radius: 20px; font-size: 0.9em; color: var(--text-secondary); }
+
+        .settings-card { background: var(--hover-bg); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 2px solid var(--border-color); }
+        .settings-card h4 { font-size: 16px; font-weight: 600; margin-bottom: 12px; color: var(--text-primary); }
+        .settings-row { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 12px; }
+        .settings-row .btn { flex: none; width: auto; padding: 10px 20px; font-size: 14px; }
+        .stat-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 14px; }
+
+        .tab-management-section { max-width: 700px; margin: 0 auto; }
+
+        .empty-state { text-align: center; padding: 60px; color: var(--text-secondary); }
+        .empty-state i { font-size: 64px; margin-bottom: 20px; display: block; }
+        .empty-state p { font-size: 18px; margin-bottom: 20px; }
+        .empty-state .btn { width: auto; margin: 0 auto; }
+
+        .filter-select {
+            flex: 1; min-width: 180px; padding: 14px 45px 14px 14px; border: 2px solid var(--border-color);
+            border-radius: 12px; font-size: 16px; background: var(--input-bg); color: var(--text-primary);
+            cursor: pointer; appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23334155' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat; background-position: right 16px center; background-size: 18px;
+        }
+        [data-theme="dark"] .filter-select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        }
+
+        .preview-image { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 2px solid var(--border-color); cursor: pointer; }
+
+        .autosave-badge {
+            display: inline-flex; align-items: center; gap: 5px; font-size: 12px;
+            padding: 4px 10px; border-radius: 20px; background: var(--badge-open-bg); color: var(--text-on-badge);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .form-row { flex-direction: column; gap: 0; }
+            .form-group { flex: 0 0 100%; }
+            .filter-section { flex-direction: column; }
+            .incident-grid { grid-template-columns: 1fr; }
+            .modal-footer { flex-direction: column; }
+            .file-actions { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <div class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </div>
+
+    <div class="app-container">
+        <div class="app-header">
+            <h1><i class="fas fa-ruler-combined"></i> Prüfmittelüberwachung & Themenmanagement</h1>
+            <div class="subtitle">
+                <i class="fas fa-clipboard-check"></i>
+                Werk Schweinfurt · MSA / MFU / Kalibrierung · Multi-User
+            </div>
+        </div>
+
+        <div class="file-info-bar">
+            <!-- Global file info -->
+            <div class="file-info-block" id="globalInfoBlock" style="display:flex;align-items:center;gap:10px;background:var(--hover-bg);padding:10px 14px;border-radius:10px;border:2px solid var(--border-color);">
+                <div style="width:40px;height:40px;border-radius:50%;background:#6366f1;display:flex;align-items:center;justify-content:center;color:white;font-size:16px;font-weight:bold;flex-shrink:0;">G</div>
+                <div>
+                    <div style="font-weight:700;font-size:15px;color:var(--text-primary);">Global</div>
+                    <div style="font-size:13px;color:var(--text-secondary);display:flex;align-items:center;gap:5px;" id="globalFileName">
+                        <i class="fas fa-exclamation-triangle" style="color:var(--btn-warning)"></i> Noch nicht gespeichert
+                    </div>
+                </div>
+                <div id="globalLockStatus" style="display:flex;align-items:center;gap:5px;font-size:12px;padding:4px 10px;border-radius:20px;background:var(--badge-closed-bg);color:var(--text-on-badge);white-space:nowrap;">
+                    <i class="fas fa-exclamation-triangle"></i> Ungesichert
+                </div>
+            </div>
+            <!-- Active user info -->
+            <div class="file-info-block" id="userInfoBlock" style="display:flex;align-items:center;gap:10px;background:var(--hover-bg);padding:10px 14px;border-radius:10px;border:2px solid var(--border-color);">
+                <div style="width:40px;height:40px;border-radius:50%;background:var(--btn-primary);display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:bold;flex-shrink:0;" id="barUserAvatar">--</div>
+                <div>
+                    <div style="font-weight:700;font-size:15px;color:var(--text-primary);" id="barUserName">Kein Mitarbeiter aktiv</div>
+                    <div style="font-size:13px;color:var(--text-secondary);display:flex;align-items:center;gap:5px;" id="barUserFile">
+                        <i class="fas fa-minus"></i> &mdash;
+                    </div>
+                </div>
+                <div id="barUserLock" style="display:flex;align-items:center;gap:5px;font-size:12px;padding:4px 10px;border-radius:20px;background:var(--badge-closed-bg);color:var(--text-on-badge);white-space:nowrap;">
+                    <i class="fas fa-minus"></i> &mdash;
+                </div>
+            </div>
+            <div class="file-actions">
+                <button class="btn-file btn-file-success" onclick="showAddUserTabModal()">
+                    <i class="fas fa-user-plus"></i> Neuer Mitarbeiter
+                </button>
+                <button class="btn-file" onclick="saveCurrentUserData()">
+                    <i class="fas fa-save"></i> Mitarbeiter speichern
+                </button>
+                <button class="btn-file btn-file-warning" onclick="loadUserFile()">
+                    <i class="fas fa-folder-open"></i> Dateien laden (mehrere möglich)
+                </button>
+                <button class="btn-file" style="background:#6366f1" onclick="saveGlobalData()">
+                    <i class="fas fa-globe"></i> Global speichern
+                </button>
+            </div>
+        </div>
+
+        <div class="main-tab-navigation" id="mainTabNav">
+            <button class="main-tab-button active" data-tab="global" onclick="switchMainTab('global')">
+                <i class="fas fa-globe"></i> Global (Vorfälle)
+            </button>
+            <button class="main-tab-button" data-tab="global-themen" onclick="switchMainTab('global-themen')">
+                <i class="fas fa-tasks"></i> Global (Themen)
+            </button>
+
+        </div>
+
+        <div id="tabContents">
+            <!-- Global Incidents -->
+            <div id="main-tab-global" class="main-tab-content active">
+                <div class="sub-tab-navigation">
+                    <button class="sub-tab-button active" onclick="switchSubTab(this,'global-list','main-tab-global')">
+                        <i class="fas fa-list"></i> Vorfälle Liste
+                    </button>
+                    <button class="sub-tab-button" onclick="switchSubTab(this,'global-new','main-tab-global')">
+                        <i class="fas fa-plus-circle"></i> Neuer Vorfall
+                    </button>
+                </div>
+                <div id="subtab-global-list" class="sub-tab-content active"></div>
+                <div id="subtab-global-new" class="sub-tab-content"></div>
+            </div>
+
+            <!-- Global Topics -->
+            <div id="main-tab-global-themen" class="main-tab-content">
+                <div class="sub-tab-navigation">
+                    <button class="sub-tab-button active" onclick="switchSubTab(this,'global-themen-list','main-tab-global-themen')">
+                        <i class="fas fa-list"></i> Themen Liste
+                    </button>
+                    <button class="sub-tab-button" onclick="switchSubTab(this,'global-themen-new','main-tab-global-themen')">
+                        <i class="fas fa-plus-circle"></i> Neues Thema
+                    </button>
+                </div>
+                <div id="subtab-global-themen-list" class="sub-tab-content active"></div>
+                <div id="subtab-global-themen-new" class="sub-tab-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"><i class="fas fa-file-alt"></i> Details</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer" id="modalFooter"></div>
+        </div>
+    </div>
+
+    <!-- Add User Tab Modal -->
+    <div class="modal" id="addUserTabModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-plus"></i> Neuen Mitarbeiter-Tab erstellen</h2>
+                <button class="close-modal" onclick="closeAddUserTabModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Mitarbeiter-Name *</label>
+                    <input type="text" id="userNameInput" placeholder="z.B. Max Mustermann">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-palette"></i> Farbe</label>
+                    <select id="userColorSelect">
+                        <option value="1">Blau</option>
+                        <option value="2">Lila</option>
+                        <option value="3">Grün</option>
+                        <option value="4">Orange</option>
+                        <option value="5">Rot</option>
+                    </select>
+                </div>
+                <p style="font-size: 14px; color: var(--text-secondary); background: var(--hover-bg); padding: 12px; border-radius: 8px; margin-top: 10px;">
+                    <i class="fas fa-info-circle"></i> Beim ersten Speichern wird die Datei für OneDrive angelegt. Danach wird automatisch in dieselbe Datei gespeichert.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" onclick="createUserTab()">
+                    <i class="fas fa-check"></i> Erstellen
+                </button>
+                <button class="btn" onclick="closeAddUserTabModal()">
+                    <i class="fas fa-times"></i> Abbrechen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Passwort Modal -->
+    <div class="password-modal" id="passwordModal">
+        <div class="password-content">
+            <h3><i class="fas fa-lock"></i> Passwort erforderlich</h3>
+            <p>Bitte geben Sie das Supervisor-Passwort ein.</p>
+            <input type="password" id="passwordInput" class="password-input" placeholder="Passwort">
+            <div class="password-error" id="passwordError">Falsches Passwort!</div>
+            <div class="password-buttons">
+                <button class="btn btn-danger" onclick="checkPasswordAndDelete()">
+                    <i class="fas fa-trash"></i> Löschen
+                </button>
+                <button class="btn" onclick="closePasswordModal()">
+                    <i class="fas fa-times"></i> Abbrechen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="confirm-modal" id="confirmModal">
+        <div class="confirm-content">
+            <h3 id="confirmTitle"><i class="fas fa-question-circle"></i> Bestätigung</h3>
+            <p id="confirmMessage"></p>
+            <div class="confirm-buttons">
+                <button class="btn btn-danger" id="confirmYesBtn">Ja, löschen</button>
+                <button class="btn" onclick="closeConfirmModal()"><i class="fas fa-times"></i> Abbrechen</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        'use strict';
+
+        // ==================== CONFIG ====================
+        const SUPERVISOR_PASSWORD = 'Supervisor';
+
+        let globalIncidents = [];
+        let globalTopics = [];
+        let userTabs = [];
+        let currentUserTabId = null;
+        let pendingDeleteCallback = null;
+
+        // Temp images for forms
+        let formImages = {};
+
+        // ==================== THEME ====================
+        window.toggleTheme = function() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.setAttribute('data-theme', 'dark');
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('zfp-theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('zfp-theme', 'light');
+            }
+        };
+        const savedTheme = localStorage.getItem('zfp-theme');
+        if (savedTheme) {
+            document.body.setAttribute('data-theme', savedTheme);
+            document.getElementById('themeIcon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // ==================== UTILS ====================
+        function updateStatus(msg) {} // kept for compat
+        function updateFileStatus(msg) {} // kept for compat
+
+        function updateBarUser(userId) {
+            const user = userId ? userTabs.find(t => t.id === userId) : null;
+            const avatar = document.getElementById('barUserAvatar');
+            const name = document.getElementById('barUserName');
+            const file = document.getElementById('barUserFile');
+            const lock = document.getElementById('barUserLock');
+            if (!avatar || !name || !file || !lock) return;
+            if (!user) {
+                avatar.textContent = '--';
+                name.textContent = 'Kein Mitarbeiter aktiv';
+                file.innerHTML = '<i class="fas fa-minus"></i> &mdash;';
+                lock.style.background = 'var(--badge-closed-bg)';
+                lock.innerHTML = '<i class="fas fa-minus"></i> &mdash;';
+            } else {
+                const initials = user.name.split(' ').map(n=>n[0]).join('').toUpperCase().substring(0,2);
+                avatar.textContent = initials;
+                name.textContent = user.name;
+                if (user.fileName) {
+                    file.innerHTML = '<i class="fas fa-file" style="color:var(--btn-primary)"></i> ' + escapeHtml(user.fileName);
+                } else {
+                    file.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:var(--btn-warning)"></i> Noch nicht gespeichert';
+                }
+                if (user.fileHandle) {
+                    lock.style.background = 'var(--badge-open-bg)';
+                    lock.innerHTML = '<i class="fas fa-link"></i> Datei verknüpft';
+                } else {
+                    lock.style.background = 'var(--badge-closed-bg)';
+                    lock.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Ungesichert';
+                }
+            }
+        }
+
+        function updateBarGlobal() {
+            const fn = document.getElementById('globalFileName');
+            const ls = document.getElementById('globalLockStatus');
+            if (!fn || !ls) return;
+            if (globalFileHandle) {
+                fn.innerHTML = '<i class="fas fa-file" style="color:#6366f1"></i> ' + escapeHtml(globalFileHandle.name);
+                ls.style.background = 'var(--badge-open-bg)';
+                ls.innerHTML = '<i class="fas fa-link"></i> Datei verknüpft';
+            } else {
+                fn.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:var(--btn-warning)"></i> Noch nicht gespeichert';
+                ls.style.background = 'var(--badge-closed-bg)';
+                ls.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Ungesichert';
+            }
+        }
+
+        function toast(msg, type = 'success') {
+            const div = document.createElement('div');
+            div.className = type === 'success' ? 'success-message' : 'error-message';
+            div.style.display = 'flex';
+            div.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i><span>${msg}</span>`;
+            const container = document.querySelector('.app-container');
+            container.insertBefore(div, container.firstChild);
+            setTimeout(() => div.remove(), 4000);
+        }
+
+        function showLoading() { document.getElementById('loadingOverlay').style.display = 'flex'; }
+        function hideLoading() { document.getElementById('loadingOverlay').style.display = 'none'; }
+
+        function genId() { return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); }
+
+        function formatDate(iso) { return new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }); }
+        function formatDateTime(iso) { return new Date(iso).toLocaleString('de-DE'); }
+
+        // Image compress
+        function compressImage(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const max = 800;
+                        let w = img.width, h = img.height;
+                        if (w > h) { if (w > max) { h *= max / w; w = max; } }
+                        else { if (h > max) { w *= max / h; h = max; } }
+                        canvas.width = w; canvas.height = h;
+                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', 0.75));
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ==================== FILE OPERATIONS ====================
+        async function saveUserFile(userId) {
+            const userTab = userTabs.find(t => t.id === userId);
+            if (!userTab) return false;
+            try {
+                const dataToSave = {
+                    version: '2.0',
+                    user: { id: userTab.id, name: userTab.name, color: userTab.color },
+                    incidents: userTab.incidents || [],
+                    topics: userTab.topics || [],
+                    lastUpdated: new Date().toISOString()
+                };
+                const jsonStr = JSON.stringify(dataToSave, null, 2);
+                const blob = new Blob([jsonStr], { type: 'application/json' });
+
+                if ('showSaveFilePicker' in window) {
+                    let handle = userTab.fileHandle;
+                    if (!handle) {
+                        handle = await window.showSaveFilePicker({
+                            suggestedName: userTab.name.replace(/\s+/g, '_').toLowerCase() + '.json',
+                            types: [{ description: 'JSON Datei', accept: { 'application/json': ['.json'] } }]
+                        });
+                        userTab.fileHandle = handle;
+                        userTab.fileName = handle.name;
+                        updateUserTabHeader(userId);
+                    }
+                    const writable = await handle.createWritable();
+                    await writable.write(blob);
+                    await writable.close();
+                } else {
+                    // Fallback: Download
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = (userTab.fileName || userTab.name.replace(/\s+/g, '_').toLowerCase() + '.json');
+                    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }
+
+                userTab.lastSaved = new Date().toISOString();
+                updateUserTabHeader(userId);
+                updateFileStatus(`<i class="fas fa-check-circle" style="color:var(--btn-success)"></i> ${userTab.fileName || userTab.name}`);
+                return true;
+            } catch (err) {
+                if (err.name !== 'AbortError') { console.error(err); toast('Fehler beim Speichern: ' + err.message, 'error'); }
+                return false;
+            }
+        }
+
+        // Lädt eine einzelne Datei-Payload und erstellt/aktualisiert den Tab
+        async function loadSingleUserData(data, handle, fileName) {
+            if (!data.user) return null;
+            let userTab = userTabs.find(t => t.id === data.user.id);
+            if (!userTab) {
+                userTab = {
+                    id: data.user.id, name: data.user.name, color: data.user.color || '1',
+                    fileName, fileHandle: handle || null,
+                    incidents: data.incidents || [], topics: data.topics || [],
+                    lastLoaded: new Date().toISOString(), createdAt: new Date().toISOString()
+                };
+                userTabs.push(userTab);
+            } else {
+                if (handle) userTab.fileHandle = handle;
+                userTab.fileName = fileName;
+                userTab.incidents = data.incidents || [];
+                userTab.topics = data.topics || [];
+                userTab.lastLoaded = new Date().toISOString();
+            }
+            renderUserTab(userTab);
+            addUserToNavigation(userTab);
+            return userTab;
+        }
+
+        // Mehrere Dateien auf einmal laden (oder einzeln — selber Dialog)
+        window.loadUserFile = async function() {
+            showLoading();
+            try {
+                let pairs = [];
+                if ('showOpenFilePicker' in window) {
+                    let handles = [];
+                    try {
+                        handles = await window.showOpenFilePicker({
+                            types: [{ description: 'PMU JSON Dateien', accept: { 'application/json': ['.json'] } }],
+                            multiple: true
+                        });
+                    } catch(e) { hideLoading(); return; } // AbortError
+                    for (const h of handles) { const f = await h.getFile(); pairs.push({ handle: h, file: f }); }
+                } else {
+                    const files = await new Promise((resolve) => {
+                        const input = document.createElement('input');
+                        input.type = 'file'; input.accept = '.json,application/json'; input.multiple = true;
+                        input.onchange = e => resolve(Array.from(e.target.files));
+                        input.oncancel = () => resolve([]);
+                        input.click();
+                    });
+                    for (const f of files) pairs.push({ handle: null, file: f });
+                }
+
+                if (pairs.length === 0) { hideLoading(); return; }
+
+                let loadedUsers = 0, loadedGlobal = 0, errors = 0, lastUser = null;
+                for (const { handle, file } of pairs) {
+                    try {
+                        const text = await file.text();
+                        const data = JSON.parse(text);
+                        if (data.type === 'global') {
+                            globalIncidents = data.incidents || [];
+                            globalTopics = data.topics || [];
+                            if (handle) globalFileHandle = handle;
+                            renderGlobalIncidents();
+                            renderGlobalTopicsView();
+                            updateBarGlobal();
+                            loadedGlobal++;
+                        } else {
+                            const userTab = await loadSingleUserData(data, handle, file.name);
+                            if (userTab) { loadedUsers++; lastUser = userTab; }
+                            else errors++;
+                        }
+                    } catch (e) { console.warn('Fehler bei', file.name, e); errors++; }
+                }
+
+                hideLoading();
+                if (loadedUsers === 0 && loadedGlobal === 0) { toast('Keine gültigen PMU-Dateien gefunden!', 'error'); return; }
+
+                if (lastUser) { switchMainTab('user-' + lastUser.id); }
+                else if (loadedGlobal > 0) { switchMainTab('global'); }
+
+                const parts = [];
+                if (loadedUsers > 0) parts.push(loadedUsers + ' Mitarbeiter-Tab(s)');
+                if (loadedGlobal > 0) parts.push('Globale Daten (' + globalIncidents.length + ' Vorfälle, ' + globalTopics.length + ' Themen)');
+                if (errors > 0) parts.push(errors + ' Fehler');
+                toast('✅ Geladen: ' + parts.join(' · '));
+            } catch (err) {
+                hideLoading();
+                if (err.name !== 'AbortError') { console.error(err); toast('Fehler: ' + err.message, 'error'); }
+            }
+        };
+
+        window.saveCurrentUserData = async function() {
+            if (!currentUserTabId) { toast('Kein Benutzer-Tab aktiv', 'error'); return; }
+            showLoading();
+            const ok = await saveUserFile(currentUserTabId);
+            hideLoading();
+            if (ok) { toast('Daten gespeichert!'); updateBarUser(currentUserTabId); }
+        };
+
+        // Auto-save helper
+        async function autoSave(userId) {
+            const userTab = userTabs.find(t => t.id === userId);
+            if (!userTab || !userTab.fileHandle) return; // only auto-save if we have a handle
+            await saveUserFile(userId);
+        }
+
+        // ==================== TAB NAVIGATION ====================
+        window.switchMainTab = function(tabId) {
+            document.querySelectorAll('.main-tab-button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.main-tab-content').forEach(c => c.classList.remove('active'));
+            const btn = document.querySelector(`.main-tab-button[data-tab="${tabId}"]`);
+            if (btn) btn.classList.add('active');
+            const content = document.getElementById(`main-tab-${tabId}`);
+            if (content) content.classList.add('active');
+                        if (tabId.startsWith('user-')) {
+                currentUserTabId = tabId.replace('user-', '');
+            } else {
+                currentUserTabId = null;
+            }
+            updateBarUser(currentUserTabId);
+        };
+
+        window.switchSubTab = function(btn, subId, parentId) {
+            const parent = document.getElementById(parentId);
+            if (!parent) return;
+            parent.querySelectorAll('.sub-tab-button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            parent.querySelectorAll('.sub-tab-content').forEach(c => c.classList.remove('active'));
+            const target = document.getElementById('subtab-' + subId);
+            if (target) target.classList.add('active');
+        };
+
+        // ==================== ADD USER TAB ====================
+        window.showAddUserTabModal = function() {
+            document.getElementById('userNameInput').value = '';
+            document.getElementById('addUserTabModal').classList.add('active');
+        };
+        window.closeAddUserTabModal = function() {
+            document.getElementById('addUserTabModal').classList.remove('active');
+        };
+
+        window.createUserTab = function() {
+            const name = document.getElementById('userNameInput').value.trim();
+            const color = document.getElementById('userColorSelect').value;
+            if (!name) { toast('Bitte Mitarbeiter-Name eingeben', 'error'); return; }
+
+            const newUser = {
+                id: genId(),
+                name,
+                color,
+                fileName: null,
+                fileHandle: null,
+                incidents: [],
+                topics: [],
+                createdAt: new Date().toISOString(),
+                lastSaved: null,
+                lastLoaded: null
+            };
+            userTabs.push(newUser);
+            renderUserTab(newUser);
+            addUserToNavigation(newUser);
+            switchMainTab('user-' + newUser.id);
+            closeAddUserTabModal();
+            toast(`Tab für ${name} erstellt! Bitte speichern Sie die Datei.`);
+        };
+
+        function addUserToNavigation(user) {
+            const nav = document.getElementById('mainTabNav');
+            if (nav.querySelector(`[data-tab="user-${user.id}"]`)) return;
+            const addBtn = nav.querySelector('.add-tab-button');
+            const tabBtn = document.createElement('button');
+            tabBtn.className = 'main-tab-button user-tab';
+            tabBtn.setAttribute('data-tab', `user-${user.id}`);
+            tabBtn.style.background = `var(--user-tab-${user.color})`;
+            tabBtn.onclick = () => switchMainTab('user-' + user.id);
+            tabBtn.innerHTML = `<i class="fas fa-user"></i> ${escapeHtml(user.name)}`;
+            tabBtn.title = 'Rechtsklick zum Schließen';
+            tabBtn.oncontextmenu = (e) => { e.preventDefault(); if (confirm(`Tab für ${user.name} schließen?`)) closeUserTab(user.id); };
+            nav.insertBefore(tabBtn, addBtn);
+        }
+
+        function closeUserTab(userId) {
+            const btn = document.querySelector(`[data-tab="user-${userId}"]`);
+            if (btn) btn.remove();
+            const content = document.getElementById(`main-tab-user-${userId}`);
+            if (content) content.remove();
+            const idx = userTabs.findIndex(t => t.id === userId);
+            if (idx !== -1) userTabs.splice(idx, 1);
+            if (currentUserTabId === userId) { currentUserTabId = null; switchMainTab('global'); }
+        }
+
+        // ==================== RENDER USER TAB ====================
+        function renderUserTab(user) {
+            let tabDiv = document.getElementById(`main-tab-user-${user.id}`);
+            if (!tabDiv) {
+                tabDiv = document.createElement('div');
+                tabDiv.id = `main-tab-user-${user.id}`;
+                tabDiv.className = 'main-tab-content';
+                tabDiv.innerHTML = buildUserTabHTML(user);
+                document.getElementById('tabContents').appendChild(tabDiv);
+            } else {
+                tabDiv.innerHTML = buildUserTabHTML(user);
+            }
+        }
+
+        function buildUserTabHTML(user) {
+            return `
+                <div class="sub-tab-navigation">
+                    <button class="sub-tab-button active" onclick="switchSubTab(this,'user-${user.id}-incidents','main-tab-user-${user.id}')">
+                        <i class="fas fa-exclamation-triangle"></i> Meine Vorfälle
+                        <span class="badge badge-category" style="margin-left:4px">${(user.incidents||[]).length}</span>
+                    </button>
+                    <button class="sub-tab-button" onclick="switchSubTab(this,'user-${user.id}-topics','main-tab-user-${user.id}')">
+                        <i class="fas fa-tasks"></i> Meine Themen
+                        <span class="badge badge-method" style="margin-left:4px">${(user.topics||[]).length}</span>
+                    </button>
+                    <button class="sub-tab-button" onclick="switchSubTab(this,'user-${user.id}-new-incident','main-tab-user-${user.id}')">
+                        <i class="fas fa-plus-circle"></i> Neuer Vorfall
+                    </button>
+                    <button class="sub-tab-button" onclick="switchSubTab(this,'user-${user.id}-new-topic','main-tab-user-${user.id}')">
+                        <i class="fas fa-plus"></i> Neues Thema
+                    </button>
+                    <button class="sub-tab-button" onclick="switchSubTab(this,'user-${user.id}-settings','main-tab-user-${user.id}')">
+                        <i class="fas fa-cog"></i> Einstellungen
+                    </button>
+                </div>
+                <div id="subtab-user-${user.id}-incidents" class="sub-tab-content active">${renderUserIncidentsList(user)}</div>
+                <div id="subtab-user-${user.id}-topics" class="sub-tab-content">${renderUserTopicsList(user)}</div>
+                <div id="subtab-user-${user.id}-new-incident" class="sub-tab-content">${renderIncidentForm(user.id)}</div>
+                <div id="subtab-user-${user.id}-new-topic" class="sub-tab-content">${renderTopicForm(user.id)}</div>
+                <div id="subtab-user-${user.id}-settings" class="sub-tab-content">${renderUserSettings(user)}</div>
+            `;
+        }
+
+        function updateUserTabHeader(userId) {
+            if (currentUserTabId === userId) updateBarUser(userId);
+        }
+
+        function refreshUserSubtabs(userId) {
+            const user = userTabs.find(t => t.id === userId);
+            if (!user) return;
+            const il = document.getElementById(`subtab-user-${userId}-incidents`);
+            if (il) il.innerHTML = renderUserIncidentsList(user);
+            const tl = document.getElementById(`subtab-user-${userId}-topics`);
+            if (tl) tl.innerHTML = renderUserTopicsList(user);
+            // Update settings
+            const sl = document.getElementById(`subtab-user-${userId}-settings`);
+            if (sl) sl.innerHTML = renderUserSettings(user);
+            // Update nav badges
+            updateUserNavBadges(userId);
+        }
+
+        function updateUserNavBadges(userId) {
+            const user = userTabs.find(t => t.id === userId);
+            if (!user) return;
+            const tabDiv = document.getElementById(`main-tab-user-${userId}`);
+            if (!tabDiv) return;
+            const btns = tabDiv.querySelectorAll('.sub-tab-button');
+            if (btns[0]) {
+                const badge = btns[0].querySelector('.badge');
+                if (badge) badge.textContent = (user.incidents||[]).length;
+            }
+            if (btns[1]) {
+                const badge = btns[1].querySelector('.badge');
+                if (badge) badge.textContent = (user.topics||[]).length;
+            }
+        }
+
+        // ==================== INCIDENT FORM ====================
+        function renderIncidentForm(userId, existingIncident = null) {
+            const isEdit = !!existingIncident;
+            const inc = existingIncident || {};
+            const formKey = `incident-form-${userId}-${isEdit ? inc.id : 'new'}`;
+
+            return `
+                <div class="form-section">
+                    <h3><i class="fas fa-${isEdit ? 'edit' : 'plus-circle'}"></i> ${isEdit ? 'Vorfall bearbeiten' : 'Neuen Vorfall erfassen'}</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-tag"></i> Kategorie *</label>
+                            <select id="${formKey}-category">
+                                <option value="">— bitte wählen —</option>
+                                <option value="Messmittel" ${inc.category === 'Messmittel' ? 'selected' : ''}>Messmittel</option>
+                                <option value="Prüfanlage" ${inc.category === 'Prüfanlage' ? 'selected' : ''}>Prüfanlage</option>
+                                <option value="Kalibrierung" ${inc.category === 'Kalibrierung' ? 'selected' : ''}>Kalibrierung</option>
+                                <option value="MSA" ${inc.category === 'MSA' ? 'selected' : ''}>MSA (Messmittelanalyse)</option>
+                                <option value="MFU" ${inc.category === 'MFU' ? 'selected' : ''}>MFU (Maschinenbefähigung)</option>
+                                <option value="Sonstiges" ${inc.category === 'Sonstiges' ? 'selected' : ''}>Sonstiges</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-ruler"></i> Messmitteltyp *</label>
+                            <select id="${formKey}-method">
+                                <option value="">— bitte wählen —</option>
+                                <option value="Lehre" ${inc.inspection_method === 'Lehre' ? 'selected' : ''}>Lehre</option>
+                                <option value="Messuhr" ${inc.inspection_method === 'Messuhr' ? 'selected' : ''}>Messuhr / Messgerät</option>
+                                <option value="Rauheitsmessgerät" ${inc.inspection_method === 'Rauheitsmessgerät' ? 'selected' : ''}>Rauheitsmessgerät</option>
+                                <option value="KMG" ${inc.inspection_method === 'KMG' ? 'selected' : ''}>KMG (Koordinatenmessgerät)</option>
+                                <option value="Härteprüfer" ${inc.inspection_method === 'Härteprüfer' ? 'selected' : ''}>Härteprüfer</option>
+                                <option value="Ultraschall" ${inc.inspection_method === 'Ultraschall' ? 'selected' : ''}>Ultraschall</option>
+                                <option value="Magnetpulver" ${inc.inspection_method === 'Magnetpulver' ? 'selected' : ''}>Magnetpulver</option>
+                                <option value="Wirbelstrom" ${inc.inspection_method === 'Wirbelstrom' ? 'selected' : ''}>Wirbelstrom</option>
+                                <option value="Sonstiges" ${inc.inspection_method === 'Sonstiges' ? 'selected' : ''}>Sonstiges</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-map-marker-alt"></i> Bereich / Abteilung *</label>
+                            <select id="${formKey}-process">
+                                <option value="">— bitte wählen —</option>
+                                <option value="Messraum" ${inc.process === 'Messraum' ? 'selected' : ''}>Messraum</option>
+                                <option value="Fertigung" ${inc.process === 'Fertigung' ? 'selected' : ''}>Fertigung</option>
+                                <option value="Härterei" ${inc.process === 'Härterei' ? 'selected' : ''}>Härterei</option>
+                                <option value="Montage" ${inc.process === 'Montage' ? 'selected' : ''}>Montage</option>
+                                <option value="Eingangskontrolle" ${inc.process === 'Eingangskontrolle' ? 'selected' : ''}>Eingangskontrolle</option>
+                                <option value="Warenausgang" ${inc.process === 'Warenausgang' ? 'selected' : ''}>Warenausgang</option>
+                                <option value="Labor" ${inc.process === 'Labor' ? 'selected' : ''}>Labor</option>
+                                <option value="Sonstiges" ${inc.process === 'Sonstiges' ? 'selected' : ''}>Sonstiges</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-layer-group"></i> Kostenstelle / Standort</label>
+                        <input type="text" id="${formKey}-segment" placeholder="z.B. KST 4711 / Halle 3" value="${escapeAttr(inc.segment || '')}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-barcode"></i> Geräte-ID / Inventarnr.</label>
+                        <input type="text" id="${formKey}-machine" placeholder="z.B. PM-0042 / INV-4711" value="${escapeAttr(inc.machine_number || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-file-invoice"></i> Prüfauftrag / Vorgang</label>
+                        <input type="text" id="${formKey}-order" placeholder="z.B. KAL-2024-015 / MSA-007" value="${escapeAttr(inc.order_number || '')}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-exclamation-triangle"></i> Fehlerart / Abweichung</label>
+                            <select id="${formKey}-errortype">
+                                <option value="">— bitte wählen —</option>
+                                <option value="Risse" ${inc.error_type === 'Risse' ? 'selected' : ''}>Risse</option>
+                                <option value="Störung" ${inc.error_type === 'Störung' ? 'selected' : ''}>Störung</option>
+                                <option value="Kalibrierungsfehler" ${inc.error_type === 'Kalibrierungsfehler' ? 'selected' : ''}>Kalibrierungsfehler</option>
+                                <option value="Ausfall" ${inc.error_type === 'Ausfall' ? 'selected' : ''}>Ausfall</option>
+                                <option value="Sonstiges" ${inc.error_type === 'Sonstiges' ? 'selected' : ''}>Sonstiges</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-tag"></i> Hersteller / Typ</label>
+                        <input type="text" id="${formKey}-type" placeholder="z.B. Mahr / Mitutoyo M-2000" value="${escapeAttr(inc.type || '')}">
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-align-left"></i> Problembeschreibung *</label>
+                        <textarea id="${formKey}-desc" placeholder="• Problem / Auffälligkeit beschreiben&#10;• Messwertabweichung, Fehlercode etc.">${escapeHtml(inc.problem_description || '')}</textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-tools"></i> Sofortmaßnahmen</label>
+                        <textarea id="${formKey}-measures" placeholder="• Sofortmaßnahme (z.B. Gerät gesperrt, Nachkalibrierung)">${escapeHtml(inc.measures || '')}</textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-camera"></i> Bilder</label>
+                        <button type="button" class="btn btn-upload" onclick="triggerImageUpload('${formKey}')">
+                            <i class="fas fa-upload"></i> Bilder auswählen / aufnehmen
+                        </button>
+                        <input type="file" id="${formKey}-file-input" accept="image/*" multiple style="display:none" onchange="handleImageUpload(this,'${formKey}')">
+                        <div id="${formKey}-image-preview" class="image-preview-grid">
+                            ${(inc.images || []).map((img, idx) => `
+                                <div class="image-preview-item" id="${formKey}-img-${idx}">
+                                    <img src="${img}" alt="Bild">
+                                    <button class="remove-image" onclick="removeFormImage('${formKey}',${idx})">&times;</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-success" onclick="${isEdit ? `saveEditIncident('${userId}','${inc.id}','${formKey}')` : `submitIncident('${userId}','${formKey}')`}">
+                            <i class="fas fa-${isEdit ? 'save' : 'plus-circle'}"></i> ${isEdit ? 'Änderungen speichern' : 'Vorfall hinzufügen'}
+                        </button>
+                        <button type="button" class="btn" onclick="cancelIncidentForm('${userId}','${isEdit}')">
+                            <i class="fas fa-times"></i> Abbrechen
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.triggerImageUpload = function(formKey) {
+            const input = document.getElementById(formKey + '-file-input');
+            if (input) input.click();
+        };
+
+        window.handleImageUpload = async function(input, formKey) {
+            if (!formImages[formKey]) formImages[formKey] = [];
+            for (const file of input.files) {
+                const compressed = await compressImage(file);
+                formImages[formKey].push(compressed);
+            }
+            renderFormImages(formKey);
+            input.value = '';
+        };
+
+        function renderFormImages(formKey) {
+            const container = document.getElementById(formKey + '-image-preview');
+            if (!container) return;
+            const imgs = formImages[formKey] || [];
+            container.innerHTML = imgs.map((img, idx) => `
+                <div class="image-preview-item">
+                    <img src="${img}" alt="Bild ${idx+1}">
+                    <button class="remove-image" onclick="removeFormImage('${formKey}',${idx})">&times;</button>
+                </div>
+            `).join('');
+        }
+
+        window.removeFormImage = function(formKey, idx) {
+            if (!formImages[formKey]) return;
+            formImages[formKey].splice(idx, 1);
+            renderFormImages(formKey);
+        };
+
+        function getFormImages(formKey, existingImages = []) {
+            return (formImages[formKey] || existingImages);
+        }
+
+        window.submitIncident = async function(userId, formKey) {
+            const user = userTabs.find(t => t.id === userId);
+            if (!user) return;
+            const category = document.getElementById(formKey + '-category')?.value;
+            const method = document.getElementById(formKey + '-method')?.value;
+            const process = document.getElementById(formKey + '-process')?.value;
+            const desc = document.getElementById(formKey + '-desc')?.value.trim();
+            if (!category || !method || !process || !desc) { toast('Bitte alle Pflichtfelder ausfüllen (*)', 'error'); return; }
+
+            const incident = {
+                id: genId(),
+                created_at: new Date().toISOString(),
+                status: 'open',
+                category,
+                inspection_method: method,
+                process,
+                segment: document.getElementById(formKey + '-segment')?.value.trim(),
+                machine_number: document.getElementById(formKey + '-machine')?.value.trim(),
+                order_number: document.getElementById(formKey + '-order')?.value.trim(),
+                error_type: document.getElementById(formKey + '-errortype')?.value,
+                type: document.getElementById(formKey + '-type')?.value.trim(),
+                problem_description: desc,
+                measures: document.getElementById(formKey + '-measures')?.value.trim(),
+                images: getFormImages(formKey)
+            };
+
+            user.incidents.push(incident);
+            delete formImages[formKey];
+
+            // Re-render form (reset) and refresh list
+            const formDiv = document.getElementById(`subtab-user-${userId}-new-incident`);
+            if (formDiv) formDiv.innerHTML = renderIncidentForm(userId);
+            refreshUserSubtabs(userId);
+
+            toast('Vorfall erfolgreich hinzugefügt!');
+            autoSave(userId);
+
+            // Switch back to list
+            const tabDiv = document.getElementById(`main-tab-user-${userId}`);
+            if (tabDiv) {
+                const firstBtn = tabDiv.querySelector('.sub-tab-button');
+                if (firstBtn) firstBtn.click();
+            }
+        };
+
+        window.cancelIncidentForm = function(userId, isEdit) {
+            const tabDiv = document.getElementById(`main-tab-user-${userId}`);
+            if (tabDiv) {
+                const firstBtn = tabDiv.querySelector('.sub-tab-button');
+                if (firstBtn) firstBtn.click();
+            }
+            if (!isEdit) {
+                const user = userTabs.find(t => t.id === userId);
+                const formKey = `incident-form-${userId}-new`;
+                delete formImages[formKey];
+            }
+        };
+
+        window.editUserIncident = function(userId, incidentId) {
+            const user = userTabs.find(t => t.id === userId);
+            if (!user) return;
+            const inc = user.incidents.find(i => i.id === incidentId);
+            if (!inc) return;
+            const formKey = `incident-form-${userId}-${incidentId}`;
+            formImages[formKey] = [...(inc.images || [])];
+
+            const formDiv = document.getElementById(`subtab-user-${userId}-new-incident`);
+            if (formDiv) formDiv.innerHTML = renderIncidentForm(userId, inc);
+
+            const tabDiv = document.getElementById(`main-tab-user-${userId}`);
+            if (tabDiv) {
+                tabDiv.querySelectorAll('.sub-tab-button').forEach(b => b.classList.remove('active'));
+                const btns = tabDiv.querySelectorAll('.sub-tab-button');
+                // Find "Neuer Vorfall" button (3rd)
+                if (btns[2]) { btns[2].classList.add('active'); }
+                tabDiv.querySelectorAll('.sub-tab-content').forEach(c => c.classList.remove('active'));
+                const f = document.getElementById(`subtab-user-${userId}-new-incident`);
+                if (f) f.classList.add('active');
+            }
+        };
+
+        window.saveEditIncident = async function(userId, incidentId, formKey) {
+            const user = userTabs.find(t => t.id === userId);
+            if (!user) return;
+            const idx = user.incidents.findIndex(i => i.id === incidentId);
+            if (idx === -1) return;
+
+            const category = document.getElementById(formKey + '-category')?.value;
+            const method = document.getElementById(formKey + '-method')?.value;
+            const process = document.getElementById(formKey + '-process')?.value;
+            const desc = document.getElementById(formKey + '-desc')?.value.trim();
+            if (!category || !method || !process || !desc) { toast('Bitte alle Pflichtfelder ausfüllen (*)', 'error'); return; }
+
+            user.incidents[idx] = {
+                ...user.incidents[idx],
+                category,
+                inspection_method: method,
+                process,
+                segment: document.getElementById(formKey + '-segment')?.value.trim(),
+                machine_number: document.getElementById(formKey + '-machine')?.value.trim(),
+                order_number: document.getElementById(formKey + '-order')?.value.trim(),
+                error_type: document.getElementById(formKey + '-errortype')?.value,
+                type: document.getElementById(formKey + '-type')?.value.trim(),
+                problem_description: desc,
+                measures: document.getElementById(formKey + '-measures')?.value.trim(),
+                images: getFormImages(formKey, user.incidents[idx].images),
+                updated_at: new Date().toISOString()
+            };
+
+            delete formImages[formKey];
+
+            const formDiv = document.getElementById(`subtab-user-${userId}-new-incident`);
+            if (formDiv) formDiv.innerHTML = renderIncidentForm(userId);
+            refreshUserSubtabs(userId);
+            toast('Vorfall aktualisiert!');
+            autoSave(userId);
+
+            const tabDiv = document.getElementById(`main-tab-user-${userId}`);
+            if (tabDiv) { const firstBtn = tabDiv.querySelector('.sub-tab-button'); if (firstBtn) firstBtn.click(); }
+        };
+
+        window.closeUserIncident = function(userId, incidentId) {
+            const user = userTabs.find(t => t.id === userId); if (!user) return;
+            const inc = user.incidents.find(i => i.id === incidentId); if (!inc) return;
+            inc.status = 'closed'; inc.closed_at = new Date().toISOString();
+            refreshUserSubtabs(userId); toast('Vorfall geschlossen.'); autoSave(userId);
+        };
+        window.reopenUserIncident = function(userId, incidentId) {
+            const user = userTabs.find(t => t.id === userId); if (!user) return;
+            const inc = user.incidents.find(i => i.id === incidentId); if (!inc) return;
+            inc.status = 'open'; delete inc.closed_at;
+            refreshUserSubtabs(userId); toast('Vorfall wieder geöffnet.'); autoSave(userId);
+        };
+        window.deleteUserIncident = function(userId, incidentId) {
+            showConfirm('Vorfall löschen?', 'Soll dieser Vorfall wirklich gelöscht werden?', () => {
+                const user = userTabs.find(t => t.id === userId); if (!user) return;
+                user.incidents = user.incidents.filter(i => i.id !== incidentId);
+                refreshUserSubtabs(userId); toast('Vorfall gelöscht.'); autoSave(userId);
+            });
+        };
+        window.openUserIncident = function(userId, incidentId) {
+            const user = userTabs.find(t => t.id === userId); if (!user) return;
+            const inc = user.incidents.find(i => i.id === incidentId); if (!inc) return;
+            showIncidentDetail(inc, userId);
+        };
+
+        // ==================== TOPIC FORM ====================
+        function renderTopicForm(userId, existingTopic = null) {
+            const isEdit = !!existingTopic;
+            const t = existingTopic || {};
+            const formKey = `topic-form-${userId}-${isEdit ? t.id : 'new'}`;
+
+            return `
+                <div class="form-section">
+                    <h3><i class="fas fa-${isEdit ? 'edit' : 'plus-circle'}"></i> ${isEdit ? 'Thema bearbeiten' : 'Neues Thema erfassen'}</h3>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-heading"></i> Titel *</label>
+                        <input type="text" id="${formKey}-title" placeholder="Thema-Titel" value="${escapeAttr(t.title || '')}">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-clock"></i> Horizont *</label>
+                            <select id="${formKey}-horizon">
+                                <option value="">— bitte wählen —</option>
+                                <option value="kurzfristig" ${t.horizon === 'kurzfristig' ? 'selected' : ''}>⚡ Kurzfristig</option>
+                                <option value="langfristig" ${t.horizon === 'langfristig' ? 'selected' : ''}>🌿 Langfristig</option>
+                                <option value="Audit" ${t.horizon === 'Audit' ? 'selected' : ''}>📋 Audit</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-tag"></i> Kategorie *</label>
+                            <select id="${formKey}-category">
+                                <option value="">— bitte wählen —</option>
+                                <option value="MSA" ${t.category === 'MSA' ? 'selected' : ''}>MSA (Messmittelanalyse)</option>
+                                <option value="MFU" ${t.category === 'MFU' ? 'selected' : ''}>MFU (Maschinenbefähigung)</option>
+                                <option value="Kalibrierung" ${t.category === 'Kalibrierung' ? 'selected' : ''}>Kalibrierung</option>
+                                <option value="Messmittelinvestition" ${t.category === 'Messmittelinvestition' ? 'selected' : ''}>Messmittelinvestition</option>
+                                <option value="Schulung" ${t.category === 'Schulung' ? 'selected' : ''}>Schulung / Qualifikation</option>
+                                <option value="Digitalisierung" ${t.category === 'Digitalisierung' ? 'selected' : ''}>Digitalisierung</option>
+                                <option value="Normierung" ${t.category === 'Normierung' ? 'selected' : ''}>Normierung / Richtlinie</option>
+                                <option value="Sonstiges" ${t.category === 'Sonstiges' ? 'selected' : ''}>Sonstiges</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-map-marker-alt"></i> Bereich / Abteilung</label>
+                            <select id="${formKey}-process">
+                                <option value="">— alle —</option>
+                                <option value="alle" ${t.process === 'alle' ? 'selected' : ''}>Alle Bereiche</option>
+                                <option value="Messraum" ${t.process === 'Messraum' ? 'selected' : ''}>Messraum</option>
+                                <option value="Fertigung" ${t.process === 'Fertigung' ? 'selected' : ''}>Fertigung</option>
+                                <option value="Härterei" ${t.process === 'Härterei' ? 'selected' : ''}>Härterei</option>
+                                <option value="Montage" ${t.process === 'Montage' ? 'selected' : ''}>Montage</option>
+                                <option value="Eingangskontrolle" ${t.process === 'Eingangskontrolle' ? 'selected' : ''}>Eingangskontrolle</option>
+                                <option value="Labor" ${t.process === 'Labor' ? 'selected' : ''}>Labor</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-ruler"></i> Messmitteltyp</label>
+                            <select id="${formKey}-method">
+                                <option value="">— alle —</option>
+                                <option value="Lehre" ${t.inspection_method === 'Lehre' ? 'selected' : ''}>Lehre</option>
+                                <option value="Messuhr" ${t.inspection_method === 'Messuhr' ? 'selected' : ''}>Messuhr / Messgerät</option>
+                                <option value="Rauheitsmessgerät" ${t.inspection_method === 'Rauheitsmessgerät' ? 'selected' : ''}>Rauheitsmessgerät</option>
+                                <option value="KMG" ${t.inspection_method === 'KMG' ? 'selected' : ''}>KMG</option>
+                                <option value="Härteprüfer" ${t.inspection_method === 'Härteprüfer' ? 'selected' : ''}>Härteprüfer</option>
+                                <option value="Ultraschall" ${t.inspection_method === 'Ultraschall' ? 'selected' : ''}>Ultraschall</option>
+                                <option value="Magnetpulver" ${t.inspection_method === 'Magnetpulver' ? 'selected' : ''}>Magnetpulver</option>
+                                <option value="Wirbelstrom" ${t.inspection_method === 'Wirbelstrom' ? 'selected' : ''}>Wirbelstrom</option>
+                                <option value="Sonstiges" ${t.inspection_method === 'Sonstiges' ? 'selected' : ''}>Sonstiges</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar-alt"></i> Startdatum</label>
+                            <input type="date" id="${formKey}-startdate" value="${t.start_date || new Date().toISOString().split('T')[0]}">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar-check"></i> Zieldatum</label>
+                            <input type="date" id="${formKey}-targetdate" value="${t.target_date || ''}">
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-percentage"></i> Fortschritt: <span id="${formKey}-progress-val">${t.progress || 0}</span>%</label>
+                        <input type="range" id="${formKey}-progress" min="0" max="100" step="5" value="${t.progress || 0}" style="width:100%;padding:0;border:none;background:transparent;" oninput="document.getElementById('${formKey}-progress-val').textContent=this.value">
+                        <div class="progress-bar"><div class="progress-fill" id="${formKey}-progress-bar" style="width:${t.progress || 0}%"></div></div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-align-left"></i> Beschreibung *</label>
+                        <textarea id="${formKey}-desc" placeholder="• Beschreiben Sie das Thema&#10;• Ziele und Hintergrund">${escapeHtml(t.description || '')}</textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-tools"></i> Maßnahmen / nächste Schritte</label>
+                        <textarea id="${formKey}-measures" placeholder="• Maßnahme 1&#10;• Maßnahme 2">${escapeHtml(t.measures || '')}</textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-camera"></i> Bilder</label>
+                        <button type="button" class="btn btn-upload" onclick="triggerImageUpload('${formKey}')">
+                            <i class="fas fa-upload"></i> Bilder auswählen / aufnehmen
+                        </button>
+                        <input type="file" id="${formKey}-file-input" accept="image/*" multiple style="display:none" onchange="handleImageUpload(this,'${formKey}')">
+                        <div id="${formKey}-image-preview" class="image-preview-grid">
+                            ${(t.images || []).map((img, idx) => `
+                                <div class="image-preview-item">
+                                    <img src="${img}" alt="Bild">
+                                    <button class="remove-image" onclick="removeFormImage('${formKey}',${idx})">&times;</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-success" onclick="${isEdit ? `saveEditTopic('${userId}','${t.id}','${formKey}')` : `submitTopic('${userId}','${formKey}')`}">
+                            <i class="fas fa-${isEdit ? 'save' : 'plus-circle'}"></i> ${isEdit ? 'Änderungen speichern' : 'Thema hinzufügen'}
+                        </button>
+                        <button type="button" class="btn" onclick="cancelTopicForm('${userId}')">
+                            <i class="fas fa-times"></i> Abbrechen
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.submitTopic = async function(userId, formKey) {
+            const user = userTabs.find(t => t.id === userId); if (!user) return;
+            const title = document.getElementById(formKey + '-title')?.value.trim();
+            const horizon = document.getElementById(formKey + '-horizon')?.value;
+            const category = document.getElementById(formKey + '-category')?.value;
+            const desc = document.getElementById(formKey + '-desc')?.value.trim();
+            if (!title || !horizon || !category || !desc) { toast('Bitte alle Pflichtfelder ausfüllen (*)', 'error'); return; }
+
+            const topic = {
+                id: genId(),
+                created_at: new Date().toISOString(),
+                status: 'open',
+                title,
+                horizon,
+                category,
+                process: document.getElementById(formKey + '-process')?.value,
+                inspection_method: document.getElementById(formKey + '-method')?.value,
+                start_date: document.getElementById(formKey + '-startdate')?.value,
+                target_date: document.getElementById(formKey + '-targetdate')?.value,
+                progress: parseInt(document.getElementById(formKey + '-progress')?.value || '0'),
+                description: desc,
+                measures: document.getElementById(formKey + '-measures')?.value.trim(),
+                images: getFormImages(formKey)
+            };
+
+            user.topics.push(topic);
+            delete formImages[formKey];
+
+            const formDiv = document.getElementById(`subtab-user-${userId}-new-topic`);
+            if (formDiv) formDiv.innerHTML = renderTopicForm(userId);
+            refreshUserSubtabs(userId);
+            toast('Thema erfolgreich hinzugefügt!');
+            autoSave(userId);
+
+            const tabDiv = document.getElementById(`main-tab-user-${userId}`);
+            if (tabDiv) { const btns = tabDiv.querySelectorAll('.sub-tab-button'); if (btns[1]) btns[1].click(); }
+        };
+
+        window.cancelTopicForm = function(userId) {
+            const tabDiv = document.getElementById(`main-tab-user-${userId}`);
+            if (tabDiv) { const btns = tabDiv.querySelectorAll('.sub-tab-button'); if (btns[1]) btns[1].click(); }
+        };
+
+        window.editUserTopic = function(userId, topicId) {
+            const user = userTabs.find(t => t.id === userId); if (!user) return;
+            const topic = user.topics.find(t => t.id === topicId); if (!topic) return;
+            const formKey = `topic-form-${userId}-${topicId}`;
+            formImages[formKey] = [...(topic.images || [])];
+            const formDiv = document.getElementById(`subtab-user-${userId}-new-topic`);
+            if (formDiv) formDiv.innerHTML = renderTopicForm(userId, topic);
+            const tabDiv = document.getElementById(`main-tab-user-${userId}`);
+            if (tabDiv) {
+                tabDiv.querySelectorAll('.sub-tab-button').forEach(b => b.classList.remove('active'));
+                const btns = tabDiv.querySelectorAll('.sub-tab-button');
+                if (btns[3]) btns[3].classList.add('active');
+                tabDiv.querySelectorAll('.sub-tab-content').forEach(c => c.classList.remove('active'));
+                const f = document.getElementById(`subtab-user-${userId}-new-topic`);
+                if (f) f.classList.add('active');
+            }
+        };
+
+        window.saveEditTopic = async function(userId, topicId, formKey) {
+            const user = userTabs.find(t => t.id === userId); if (!user) return;
+            const idx = user.topics.findIndex(t => t.id === topicId); if (idx === -1) return;
+            const title = document.getElementById(formKey + '-title')?.value.trim();
+            const horizon = document.getElementById(formKey + '-horizon')?.value;
+            const category = document.getElementById(formKey + '-category')?.value;
+            const desc = document.getElementById(formKey + '-desc')?.value.trim();
+            if (!title || !horizon || !category || !desc) { toast('Bitte alle Pflichtfelder ausfüllen (*)', 'error'); return; }
+
+            user.topics[idx] = {
+                ...user.topics[idx],
+                title,
+                horizon,
+                category,
+                process: document.getElementById(formKey + '-process')?.value,
+                inspection_method: document.getElementById(formKey + '-method')?.value,
+                start_date: document.getElementById(formKey + '-startdate')?.value,
+                target_date: document.getElementById(formKey + '-targetdate')?.value,
+                progress: parseInt(document.getElementById(formKey + '-progress')?.value || '0'),
+                description: desc,
+                measures: document.getElementById(formKey + '-measures')?.value.trim(),
+                images: getFormImages(formKey, user.topics[idx].images),
+                updated_at: new Date().toISOString()
+            };
+
+            delete formImages[formKey];
+            const formDiv = document.getElementById(`subtab-user-${userId}-new-topic`);
+            if (formDiv) formDiv.innerHTML = renderTopicForm(userId);
+            refreshUserSubtabs(userId);
+            toast('Thema aktualisiert!');
+            autoSave(userId);
+            const tabDiv = document.getElementById(`main-tab-user-${userId}`);
+            if (tabDiv) { const btns = tabDiv.querySelectorAll('.sub-tab-button'); if (btns[1]) btns[1].click(); }
+        };
+
+        window.closeUserTopic = function(userId, topicId) {
+            const user = userTabs.find(t => t.id === userId); if (!user) return;
+            const t = user.topics.find(t => t.id === topicId); if (!t) return;
+            t.status = 'closed'; t.closed_at = new Date().toISOString();
+            refreshUserSubtabs(userId); toast('Thema geschlossen.'); autoSave(userId);
+        };
+        window.reopenUserTopic = function(userId, topicId) {
+            const user = userTabs.find(t => t.id === userId); if (!user) return;
+            const t = user.topics.find(tp => tp.id === topicId); if (!t) return;
+            t.status = 'open'; delete t.closed_at;
+            refreshUserSubtabs(userId); toast('Thema wieder geöffnet.'); autoSave(userId);
+        };
+        window.deleteUserTopic = function(userId, topicId) {
+            showConfirm('Thema löschen?', 'Soll dieses Thema wirklich gelöscht werden?', () => {
+                const user = userTabs.find(t => t.id === userId); if (!user) return;
+                user.topics = user.topics.filter(t => t.id !== topicId);
+                refreshUserSubtabs(userId); toast('Thema gelöscht.'); autoSave(userId);
+            });
+        };
+        window.openUserTopic = function(userId, topicId) {
+            const user = userTabs.find(t => t.id === userId); if (!user) return;
+            const t = user.topics.find(tp => tp.id === topicId); if (!t) return;
+            showTopicDetail(t, userId);
+        };
+
+        // ==================== RENDER LISTS ====================
+        function renderUserIncidentsList(user) {
+            if (!user.incidents || user.incidents.length === 0) {
+                return `<div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <p>Keine Vorfälle vorhanden</p>
+                </div>`;
+            }
+            const sorted = [...user.incidents].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            let html = `<div class="filter-section">
+                <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="Suchen..." oninput="filterIncidents(this,'${user.id}')"></div>
+                <select class="filter-select" onchange="filterIncidentStatus(this,'${user.id}')">
+                    <option value="">Alle Status</option>
+                    <option value="open">Offen</option>
+                    <option value="closed">Geschlossen</option>
+                </select>
+            </div>
+            <div id="incident-list-${user.id}" class="incident-grid">`;
+            sorted.forEach(inc => {
+                html += renderIncidentCard(inc, user.id);
+            });
+            html += '</div>';
+            return html;
+        }
+
+        function renderIncidentCard(inc, userId) {
+            const sc = inc.status === 'closed' ? 'closed' : '';
+            const preview = (inc.images && inc.images.length > 0) ? `<img class="preview-image" src="${inc.images[0]}" onclick="openUserIncident('${userId}','${inc.id}')">` : '';
+            return `
+                <div class="incident-card" data-status="${inc.status}" data-search="${escapeAttr((inc.category||'') + ' ' + (inc.process||'') + ' ' + (inc.machine_number||'') + ' ' + (inc.order_number||'') + ' ' + (inc.problem_description||''))}">
+                    <div class="card-header">
+                        <div class="card-badges">
+                            <span class="badge badge-category"><i class="fas fa-tag"></i> ${escapeHtml(inc.category)}</span>
+                            <span class="badge badge-method"><i class="fas fa-ruler"></i> ${escapeHtml(inc.inspection_method)}</span>
+                            <span class="badge badge-status ${sc}">${inc.status === 'open' ? '🟢 Offen' : '🔴 Geschlossen'}</span>
+                        </div>
+                        <div class="card-date"><i class="far fa-calendar-alt"></i> ${formatDate(inc.created_at)}</div>
+                    </div>
+                    <div class="card-content" onclick="openUserIncident('${userId}','${inc.id}')">
+                        ${inc.machine_number ? `<div class="info-row"><span class="info-label">Gerät-ID:</span><span class="info-value">${escapeHtml(inc.machine_number)}</span></div>` : ''}
+                        ${inc.order_number ? `<div class="info-row"><span class="info-label">Prüfauftrag:</span><span class="info-value">${escapeHtml(inc.order_number)}</span></div>` : ''}
+                        <div class="info-row"><span class="info-label">Bereich:</span><span class="info-value">${escapeHtml(inc.process)}</span></div>
+                        <div class="info-row"><span class="info-label">Problem:</span><span class="info-value">${escapeHtml((inc.problem_description || '').substring(0, 120))}${(inc.problem_description || '').length > 120 ? '...' : ''}</span></div>
+                        ${preview ? `<div class="card-preview">${preview}</div>` : ''}
+                    </div>
+                    <div class="card-actions">
+                        <button class="action-button view" onclick="openUserIncident('${userId}','${inc.id}')"><i class="fas fa-eye"></i> Details</button>
+                        <button class="action-button edit" onclick="editUserIncident('${userId}','${inc.id}')"><i class="fas fa-edit"></i> Edit</button>
+                        ${inc.status === 'open'
+                            ? `<button class="action-button close-btn" onclick="closeUserIncident('${userId}','${inc.id}')"><i class="fas fa-check"></i> Fertig</button>`
+                            : `<button class="action-button reopen" onclick="reopenUserIncident('${userId}','${inc.id}')"><i class="fas fa-undo"></i> Öffnen</button>`}
+                        <button class="action-button delete" onclick="deleteUserIncident('${userId}','${inc.id}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderUserTopicsList(user) {
+            if (!user.topics || user.topics.length === 0) {
+                return `<div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <p>Keine Themen vorhanden</p>
+                </div>`;
+            }
+            const sorted = [...user.topics].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            let html = `<div class="filter-section">
+                <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="Suchen..." oninput="filterTopics(this,'${user.id}')"></div>
+                <select class="filter-select" onchange="filterTopicStatus(this,'${user.id}')">
+                    <option value="">Alle Status</option>
+                    <option value="open">Offen</option>
+                    <option value="closed">Geschlossen</option>
+                </select>
+                <select class="filter-select" onchange="filterTopicHorizon(this,'${user.id}')">
+                    <option value="">Alle Horizonte</option>
+                    <option value="kurzfristig">Kurzfristig</option>
+                    <option value="langfristig">Langfristig</option>
+                    <option value="Audit">Audit</option>
+                </select>
+            </div>
+            <div id="topic-list-${user.id}" class="incident-grid">`;
+            sorted.forEach(t => {
+                html += renderTopicCard(t, user.id);
+            });
+            html += '</div>';
+            return html;
+        }
+
+        function renderTopicCard(t, userId) {
+            const sc = t.status === 'closed' ? 'closed' : '';
+            const hBadge = t.horizon === 'langfristig' ? 'badge-long' : (t.horizon === 'kurzfristig' ? 'badge-short' : 'badge-audit');
+            const hIcon = t.horizon === 'langfristig' ? '🌿' : (t.horizon === 'kurzfristig' ? '⚡' : '📋');
+            const preview = (t.images && t.images.length > 0) ? `<img class="preview-image" src="${t.images[0]}" onclick="openUserTopic('${userId}','${t.id}')">` : '';
+            return `
+                <div class="incident-card" data-status="${t.status}" data-horizon="${t.horizon}" data-search="${escapeAttr((t.title||'') + ' ' + (t.category||'') + ' ' + (t.description||''))}">
+                    <div class="card-header">
+                        <div class="card-badges">
+                            <span class="badge ${hBadge}">${hIcon} ${escapeHtml(t.horizon)}</span>
+                            <span class="badge badge-category">${escapeHtml(t.category)}</span>
+                            <span class="badge badge-status ${sc}">${t.status === 'open' ? '🟢 Offen' : '🔴 Geschlossen'}</span>
+                        </div>
+                        <div class="card-date"><i class="far fa-calendar-alt"></i> ${formatDate(t.created_at)}</div>
+                    </div>
+                    <div class="card-content" onclick="openUserTopic('${userId}','${t.id}')">
+                        <h3 style="margin-bottom:10px;font-size:16px;">${escapeHtml(t.title)}</h3>
+                        <div class="info-row"><span class="info-label">Beschreibung:</span><span class="info-value">${escapeHtml((t.description||'').substring(0,120))}${(t.description||'').length>120?'...':''}</span></div>
+                        ${t.target_date ? `<div class="info-row"><span class="info-label">Zieldatum:</span><span class="info-value">${formatDate(t.target_date)}</span></div>` : ''}
+                        <div class="progress-bar" style="margin-top:10px"><div class="progress-fill" style="width:${t.progress||0}%"></div></div>
+                        <div style="font-size:12px;color:var(--text-secondary);margin-top:4px">Fortschritt: ${t.progress||0}%</div>
+                        ${preview ? `<div class="card-preview">${preview}</div>` : ''}
+                    </div>
+                    <div class="card-actions">
+                        <button class="action-button view" onclick="openUserTopic('${userId}','${t.id}')"><i class="fas fa-eye"></i> Details</button>
+                        <button class="action-button edit" onclick="editUserTopic('${userId}','${t.id}')"><i class="fas fa-edit"></i> Edit</button>
+                        ${t.status === 'open'
+                            ? `<button class="action-button close-btn" onclick="closeUserTopic('${userId}','${t.id}')"><i class="fas fa-check"></i> Fertig</button>`
+                            : `<button class="action-button reopen" onclick="reopenUserTopic('${userId}','${t.id}')"><i class="fas fa-undo"></i> Öffnen</button>`}
+                        <button class="action-button delete" onclick="deleteUserTopic('${userId}','${t.id}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== FILTER FUNCTIONS ====================
+        window.filterIncidents = function(input, userId) {
+            filterCards(`incident-list-${userId}`, input.value);
+        };
+        window.filterIncidentStatus = function(sel, userId) {
+            filterCardsByAttr(`incident-list-${userId}`, 'data-status', sel.value);
+        };
+        window.filterTopics = function(input, userId) {
+            filterCards(`topic-list-${userId}`, input.value);
+        };
+        window.filterTopicStatus = function(sel, userId) {
+            filterCardsByAttr(`topic-list-${userId}`, 'data-status', sel.value);
+        };
+        window.filterTopicHorizon = function(sel, userId) {
+            filterCardsByAttr(`topic-list-${userId}`, 'data-horizon', sel.value);
+        };
+
+        function filterCards(listId, query) {
+            const list = document.getElementById(listId);
+            if (!list) return;
+            const q = query.toLowerCase();
+            list.querySelectorAll('.incident-card').forEach(card => {
+                const searchText = (card.getAttribute('data-search') || '').toLowerCase();
+                card.style.display = (!q || searchText.includes(q)) ? '' : 'none';
+            });
+        }
+        function filterCardsByAttr(listId, attr, val) {
+            const list = document.getElementById(listId);
+            if (!list) return;
+            list.querySelectorAll('.incident-card').forEach(card => {
+                const attrVal = card.getAttribute(attr) || '';
+                card.style.display = (!val || attrVal === val) ? '' : 'none';
+            });
+        }
+
+        // ==================== USER SETTINGS ====================
+        function renderUserSettings(user) {
+            return `
+                <div class="tab-management-section">
+                    <h3 style="margin-bottom:20px;">Einstellungen für ${escapeHtml(user.name)}</h3>
+                    <div class="settings-card">
+                        <h4><i class="fas fa-file"></i> Datei-Informationen</h4>
+                        <div class="stat-item"><i class="fas fa-file" style="color:var(--btn-primary)"></i> Datei: ${user.fileName ? escapeHtml(user.fileName) : 'Noch nicht gespeichert'}</div>
+                        <div class="stat-item"><i class="fas fa-clock" style="color:var(--btn-primary)"></i> Erstellt: ${user.createdAt ? formatDateTime(user.createdAt) : '-'}</div>
+                        <div class="stat-item"><i class="fas fa-save" style="color:var(--btn-success)"></i> Zuletzt gespeichert: ${user.lastSaved ? formatDateTime(user.lastSaved) : 'Nie'}</div>
+                        <div class="stat-item"><i class="fas fa-folder-open" style="color:var(--btn-warning)"></i> Zuletzt geladen: ${user.lastLoaded ? formatDateTime(user.lastLoaded) : 'Nie'}</div>
+                    </div>
+                    <div class="settings-card">
+                        <h4><i class="fas fa-chart-bar"></i> Statistik</h4>
+                        <div class="stat-item"><i class="fas fa-exclamation-triangle" style="color:var(--btn-danger)"></i> Vorfälle gesamt: <strong>${(user.incidents||[]).length}</strong> (${(user.incidents||[]).filter(i=>i.status==='open').length} offen)</div>
+                        <div class="stat-item"><i class="fas fa-tasks" style="color:var(--btn-primary)"></i> Themen gesamt: <strong>${(user.topics||[]).length}</strong> (${(user.topics||[]).filter(t=>t.status==='open').length} offen)</div>
+                    </div>
+                    <div class="settings-card">
+                        <h4><i class="fas fa-tools"></i> Aktionen</h4>
+                        <div class="settings-row">
+                            <button class="btn btn-success" onclick="saveCurrentUserData()"><i class="fas fa-save"></i> Jetzt speichern</button>
+                            <button class="btn btn-primary" onclick="exportUserData('${user.id}')"><i class="fas fa-download"></i> JSON exportieren</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.exportUserData = function(userId) {
+            const user = userTabs.find(t => t.id === userId); if (!user) return;
+            const data = JSON.stringify({ version:'2.0', user:{id:user.id,name:user.name,color:user.color}, incidents:user.incidents, topics:user.topics, exportDate:new Date().toISOString() }, null, 2);
+            const blob = new Blob([data], { type:'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href=url; a.download=`export_${user.name.replace(/\s+/g,'_')}_${Date.now()}.json`;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+        };
+
+        // ==================== DETAIL MODALS ====================
+        function showIncidentDetail(inc, userId) {
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            const modalFooter = document.getElementById('modalFooter');
+            modalTitle.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Vorfall-Details`;
+
+            let imgHtml = '';
+            if (inc.images && inc.images.length > 0) {
+                imgHtml = `<div class="detail-section"><h3><i class="fas fa-images"></i> Bilder</h3><div class="image-gallery">
+                    ${inc.images.map((img,i) => `<img class="gallery-image" src="${img}" alt="Bild ${i+1}" onclick="openImageFullscreen('${encodeURIComponent(img)}')">`).join('')}
+                </div></div>`;
+            }
+
+            modalBody.innerHTML = `
+                <div class="detail-section">
+                    <h3><i class="fas fa-info-circle"></i> Allgemein</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item"><div class="detail-label">Kategorie</div><div class="detail-value">${escapeHtml(inc.category)}</div></div>
+                        <div class="detail-item"><div class="detail-label">Messmitteltyp</div><div class="detail-value">${escapeHtml(inc.inspection_method)}</div></div>
+                        <div class="detail-item"><div class="detail-label">Bereich / Abteilung</div><div class="detail-value">${escapeHtml(inc.process)}</div></div>
+                        ${inc.segment ? `<div class="detail-item"><div class="detail-label">Kostenstelle</div><div class="detail-value">${escapeHtml(inc.segment)}</div></div>` : ''}
+                        <div class="detail-item"><div class="detail-label">Status</div><div class="detail-value">${inc.status === 'open' ? '🟢 Offen' : '🔴 Geschlossen'}</div></div>
+                        <div class="detail-item"><div class="detail-label">Erstellt am</div><div class="detail-value">${formatDateTime(inc.created_at)}</div></div>
+                        ${inc.closed_at ? `<div class="detail-item"><div class="detail-label">Geschlossen am</div><div class="detail-value">${formatDateTime(inc.closed_at)}</div></div>` : ''}
+                        ${inc.updated_at ? `<div class="detail-item"><div class="detail-label">Geändert am</div><div class="detail-value">${formatDateTime(inc.updated_at)}</div></div>` : ''}
+                    </div>
+                </div>
+                ${inc.machine_number || inc.order_number || inc.type || inc.error_type ? `
+                <div class="detail-section">
+                    <h3><i class="fas fa-cogs"></i> Maschine / Auftrag</h3>
+                    <div class="detail-grid">
+                        ${inc.machine_number ? `<div class="detail-item"><div class="detail-label">Geräte-ID / Inv.-Nr.</div><div class="detail-value">${escapeHtml(inc.machine_number)}</div></div>` : ''}
+                        ${inc.order_number ? `<div class="detail-item"><div class="detail-label">Prüfauftrag / Vorgang</div><div class="detail-value">${escapeHtml(inc.order_number)}</div></div>` : ''}
+                        ${inc.type ? `<div class="detail-item"><div class="detail-label">Type</div><div class="detail-value">${escapeHtml(inc.type)}</div></div>` : ''}
+                        ${inc.error_type ? `<div class="detail-item"><div class="detail-label">Fehlerart</div><div class="detail-value">${escapeHtml(inc.error_type)}</div></div>` : ''}
+                    </div>
+                </div>` : ''}
+                <div class="detail-section">
+                    <h3><i class="fas fa-align-left"></i> Problembeschreibung</h3>
+                    <div style="background:var(--hover-bg);padding:20px;border-radius:12px;white-space:pre-line;">${escapeHtml(inc.problem_description || '-')}</div>
+                </div>
+                ${inc.measures ? `<div class="detail-section"><h3><i class="fas fa-tools"></i> Maßnahmen</h3><div style="background:var(--hover-bg);padding:20px;border-radius:12px;white-space:pre-line;">${escapeHtml(inc.measures)}</div></div>` : ''}
+                ${imgHtml}
+            `;
+
+            modalFooter.innerHTML = '';
+            if (userId) {
+                modalFooter.innerHTML = `
+                    <button class="btn btn-warning" onclick="closeModal();editUserIncident('${userId}','${inc.id}')"><i class="fas fa-edit"></i> Bearbeiten</button>
+                    ${inc.status === 'open'
+                        ? `<button class="btn btn-success" onclick="closeModal();closeUserIncident('${userId}','${inc.id}')"><i class="fas fa-check"></i> Fertig</button>`
+                        : `<button class="btn btn-reopen" onclick="closeModal();reopenUserIncident('${userId}','${inc.id}')"><i class="fas fa-undo"></i> Wieder öffnen</button>`}
+                    <button class="btn" onclick="closeModal()"><i class="fas fa-times"></i> Schließen</button>
+                `;
+            } else {
+                modalFooter.innerHTML = `<button class="btn" onclick="closeModal()"><i class="fas fa-times"></i> Schließen</button>`;
+            }
+
+            document.getElementById('detailModal').classList.add('active');
+        }
+
+        function showTopicDetail(t, userId) {
+            const modalBody = document.getElementById('modalBody');
+            const modalFooter = document.getElementById('modalFooter');
+            document.getElementById('modalTitle').innerHTML = `<i class="fas fa-tasks"></i> Thema-Details`;
+
+            let imgHtml = '';
+            if (t.images && t.images.length > 0) {
+                imgHtml = `<div class="detail-section"><h3><i class="fas fa-images"></i> Bilder</h3><div class="image-gallery">
+                    ${t.images.map((img,i) => `<img class="gallery-image" src="${img}" alt="Bild ${i+1}" onclick="openImageFullscreen('${encodeURIComponent(img)}')">`).join('')}
+                </div></div>`;
+            }
+
+            modalBody.innerHTML = `
+                <div class="detail-section">
+                    <h3><i class="fas fa-info-circle"></i> ${escapeHtml(t.title)}</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item"><div class="detail-label">Horizont</div><div class="detail-value">${escapeHtml(t.horizon)}</div></div>
+                        <div class="detail-item"><div class="detail-label">Kategorie</div><div class="detail-value">${escapeHtml(t.category)}</div></div>
+                        <div class="detail-item"><div class="detail-label">Status</div><div class="detail-value">${t.status === 'open' ? '🟢 Offen' : '🔴 Geschlossen'}</div></div>
+                        <div class="detail-item"><div class="detail-label">Fortschritt</div><div class="detail-value">${t.progress||0}%</div></div>
+                        ${t.process ? `<div class="detail-item"><div class="detail-label">Bereich / Abteilung</div><div class="detail-value">${escapeHtml(t.process)}</div></div>` : ''}
+                        ${t.inspection_method ? `<div class="detail-item"><div class="detail-label">Messmitteltyp</div><div class="detail-value">${escapeHtml(t.inspection_method)}</div></div>` : ''}
+                        ${t.start_date ? `<div class="detail-item"><div class="detail-label">Startdatum</div><div class="detail-value">${t.start_date}</div></div>` : ''}
+                        ${t.target_date ? `<div class="detail-item"><div class="detail-label">Zieldatum</div><div class="detail-value">${t.target_date}</div></div>` : ''}
+                        <div class="detail-item"><div class="detail-label">Erstellt am</div><div class="detail-value">${formatDateTime(t.created_at)}</div></div>
+                    </div>
+                    <div class="progress-bar" style="margin-top:15px"><div class="progress-fill" style="width:${t.progress||0}%"></div></div>
+                </div>
+                <div class="detail-section">
+                    <h3><i class="fas fa-align-left"></i> Beschreibung</h3>
+                    <div style="background:var(--hover-bg);padding:20px;border-radius:12px;white-space:pre-line;">${escapeHtml(t.description || '-')}</div>
+                </div>
+                ${t.measures ? `<div class="detail-section"><h3><i class="fas fa-tools"></i> Maßnahmen</h3><div style="background:var(--hover-bg);padding:20px;border-radius:12px;white-space:pre-line;">${escapeHtml(t.measures)}</div></div>` : ''}
+                ${imgHtml}
+            `;
+
+            modalFooter.innerHTML = '';
+            if (userId) {
+                modalFooter.innerHTML = `
+                    <button class="btn btn-warning" onclick="closeModal();editUserTopic('${userId}','${t.id}')"><i class="fas fa-edit"></i> Bearbeiten</button>
+                    ${t.status === 'open'
+                        ? `<button class="btn btn-success" onclick="closeModal();closeUserTopic('${userId}','${t.id}')"><i class="fas fa-check"></i> Fertig</button>`
+                        : `<button class="btn btn-reopen" onclick="closeModal();reopenUserTopic('${userId}','${t.id}')"><i class="fas fa-undo"></i> Wieder öffnen</button>`}
+                    <button class="btn" onclick="closeModal()"><i class="fas fa-times"></i> Schließen</button>
+                `;
+            } else {
+                modalFooter.innerHTML = `<button class="btn" onclick="closeModal()"><i class="fas fa-times"></i> Schließen</button>`;
+            }
+
+            document.getElementById('detailModal').classList.add('active');
+        }
+
+        window.openImageFullscreen = function(encodedSrc) {
+            const src = decodeURIComponent(encodedSrc);
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out;';
+            overlay.onclick = () => overlay.remove();
+            const img = document.createElement('img');
+            img.src = src;
+            img.style.cssText = 'max-width:95vw;max-height:95vh;border-radius:12px;box-shadow:0 25px 50px rgba(0,0,0,0.8);';
+            overlay.appendChild(img);
+            document.body.appendChild(overlay);
+        };
+
+        window.closeModal = function() { document.getElementById('detailModal').classList.remove('active'); };
+
+        // ==================== GLOBAL TABS (incidents + topics) ====================
+        function renderGlobalNewIncidentForm() {
+            const container = document.getElementById('subtab-global-new');
+            if (!container) return;
+            container.innerHTML = `
+                <div class="form-section">
+                    <h3><i class="fas fa-plus-circle"></i> Globalen Vorfall erfassen</h3>
+                    ${buildGlobalIncidentForm()}
+                </div>
+            `;
+        }
+
+        function buildGlobalIncidentForm(existing = null) {
+            const inc = existing || {};
+            const fk = 'global-incident-form';
+            return `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Kategorie *</label>
+                        <select id="${fk}-category">
+                            <option value="">— bitte wählen —</option>
+                            <option value="Messmittel" ${inc.category==='Messmittel'?'selected':''}>Messmittel</option>
+                            <option value="Prüfanlage" ${inc.category==='Prüfanlage'?'selected':''}>Prüfanlage</option>
+                            <option value="Kalibrierung" ${inc.category==='Kalibrierung'?'selected':''}>Kalibrierung</option>
+                            <option value="MSA" ${inc.category==='MSA'?'selected':''}>MSA (Messmittelanalyse)</option>
+                            <option value="MFU" ${inc.category==='MFU'?'selected':''}>MFU (Maschinenbefähigung)</option>
+                            <option value="Sonstiges" ${inc.category==='Sonstiges'?'selected':''}>Sonstiges</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-ruler"></i> Messmitteltyp *</label>
+                        <select id="${fk}-method">
+                            <option value="">— bitte wählen —</option>
+                            <option value="Lehre" ${inc.inspection_method==='Lehre'?'selected':''}>Lehre</option>
+                            <option value="Messuhr" ${inc.inspection_method==='Messuhr'?'selected':''}>Messuhr / Messgerät</option>
+                            <option value="Rauheitsmessgerät" ${inc.inspection_method==='Rauheitsmessgerät'?'selected':''}>Rauheitsmessgerät</option>
+                            <option value="KMG" ${inc.inspection_method==='KMG'?'selected':''}>KMG</option>
+                            <option value="Härteprüfer" ${inc.inspection_method==='Härteprüfer'?'selected':''}>Härteprüfer</option>
+                            <option value="Ultraschall" ${inc.inspection_method==='Ultraschall'?'selected':''}>Ultraschall</option>
+                            <option value="Magnetpulver" ${inc.inspection_method==='Magnetpulver'?'selected':''}>Magnetpulver</option>
+                            <option value="Wirbelstrom" ${inc.inspection_method==='Wirbelstrom'?'selected':''}>Wirbelstrom</option>
+                            <option value="Sonstiges" ${inc.inspection_method==='Sonstiges'?'selected':''}>Sonstiges</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Bereich / Abteilung *</label>
+                        <select id="${fk}-process">
+                            <option value="">— bitte wählen —</option>
+                            <option value="Messraum">Messraum</option>
+                            <option value="Fertigung">Fertigung</option>
+                            <option value="Härterei">Härterei</option>
+                            <option value="Montage">Montage</option>
+                            <option value="Eingangskontrolle">Eingangskontrolle</option>
+                            <option value="Warenausgang">Warenausgang</option>
+                            <option value="Labor">Labor</option>
+                            <option value="Sonstiges">Sonstiges</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-layer-group"></i> Segment</label>
+                        <input type="text" id="${fk}-segment" placeholder="z.B. Segment 4" value="${escapeAttr(inc.segment||'')}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-cogs"></i> Maschinennummer</label>
+                        <input type="text" id="${fk}-machine" placeholder="z.B. M-4711" value="${escapeAttr(inc.machine_number||'')}">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-file-invoice"></i> Auftragsnummer</label>
+                        <input type="text" id="${fk}-order" placeholder="z.B. A-2024-015" value="${escapeAttr(inc.order_number||'')}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-exclamation-triangle"></i> Fehlerart / Abweichung</label>
+                        <select id="${fk}-errortype">
+                            <option value="">—</option>
+                            <option value="Risse">Risse</option>
+                            <option value="Störung">Störung</option>
+                            <option value="Kalibrierungsfehler">Kalibrierungsfehler</option>
+                            <option value="Ausfall">Ausfall</option>
+                            <option value="Sonstiges">Sonstiges</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-cube"></i> Type</label>
+                        <input type="text" id="${fk}-type" placeholder="z.B. Typ X-2000" value="${escapeAttr(inc.type||'')}">
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label><i class="fas fa-align-left"></i> Problembeschreibung *</label>
+                    <textarea id="${fk}-desc" placeholder="• Problem beschreiben">${escapeHtml(inc.problem_description||'')}</textarea>
+                </div>
+                <div class="form-group full-width">
+                    <label><i class="fas fa-tools"></i> Sofortmaßnahmen</label>
+                    <textarea id="${fk}-measures" placeholder="• Maßnahmen">${escapeHtml(inc.measures||'')}</textarea>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-success" onclick="submitGlobalIncident()"><i class="fas fa-plus-circle"></i> Hinzufügen</button>
+                    <button class="btn" onclick="switchSubTab(document.querySelector('[onclick*=\\'global-list\\']'),'global-list','main-tab-global')"><i class="fas fa-times"></i> Abbrechen</button>
+                </div>
+            `;
+        }
+
+        window.submitGlobalIncident = function() {
+            const fk = 'global-incident-form';
+            const category = document.getElementById(fk+'-category')?.value;
+            const method = document.getElementById(fk+'-method')?.value;
+            const process = document.getElementById(fk+'-process')?.value;
+            const desc = document.getElementById(fk+'-desc')?.value.trim();
+            if (!category || !method || !process || !desc) { toast('Bitte alle Pflichtfelder ausfüllen', 'error'); return; }
+
+            globalIncidents.push({
+                id: genId(),
+                created_at: new Date().toISOString(),
+                status: 'open',
+                category, inspection_method: method, process,
+                segment: document.getElementById(fk+'-segment')?.value.trim(),
+                machine_number: document.getElementById(fk+'-machine')?.value.trim(),
+                order_number: document.getElementById(fk+'-order')?.value.trim(),
+                error_type: document.getElementById(fk+'-errortype')?.value,
+                type: document.getElementById(fk+'-type')?.value.trim(),
+                problem_description: desc,
+                measures: document.getElementById(fk+'-measures')?.value.trim(),
+                images: []
+            });
+
+            renderGlobalIncidents();
+            renderGlobalNewIncidentForm();
+            autoSaveGlobal();
+            toast('Globaler Vorfall hinzugefügt!');
+            const tabDiv = document.getElementById('main-tab-global');
+            if (tabDiv) { const firstBtn = tabDiv.querySelector('.sub-tab-button'); if (firstBtn) firstBtn.click(); }
+        };
+
+        function renderGlobalNewTopicForm() {
+            const container = document.getElementById('subtab-global-themen-new');
+            if (!container) return;
+            const fk = 'global-topic-form';
+            container.innerHTML = `
+                <div class="form-section">
+                    <h3><i class="fas fa-plus-circle"></i> Globales Thema erfassen</h3>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-heading"></i> Titel *</label>
+                        <input type="text" id="${fk}-title" placeholder="Thema-Titel">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-clock"></i> Horizont *</label>
+                            <select id="${fk}-horizon">
+                                <option value="">—</option>
+                                <option value="kurzfristig">⚡ Kurzfristig</option>
+                                <option value="langfristig">🌿 Langfristig</option>
+                                <option value="Audit">📋 Audit</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-tag"></i> Kategorie *</label>
+                            <select id="${fk}-category">
+                                <option value="">—</option>
+                                <option value="MSA">MSA (Messmittelanalyse)</option>
+                                <option value="MFU">MFU (Maschinenbefähigung)</option>
+                                <option value="Kalibrierung">Kalibrierung</option>
+                                <option value="Messmittelinvestition">Messmittelinvestition</option>
+                                <option value="Schulung">Schulung / Qualifikation</option>
+                                <option value="Digitalisierung">Digitalisierung</option>
+                                <option value="Normierung">Normierung / Richtlinie</option>
+                                <option value="Sonstiges">Sonstiges</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar-alt"></i> Startdatum</label>
+                            <input type="date" id="${fk}-startdate" value="${new Date().toISOString().split('T')[0]}">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar-check"></i> Zieldatum</label>
+                            <input type="date" id="${fk}-targetdate">
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-percentage"></i> Fortschritt: <span id="${fk}-progress-val">0</span>%</label>
+                        <input type="range" id="${fk}-progress" min="0" max="100" step="5" value="0" style="width:100%;padding:0;border:none;background:transparent;" oninput="document.getElementById('${fk}-progress-val').textContent=this.value">
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-align-left"></i> Beschreibung *</label>
+                        <textarea id="${fk}-desc" placeholder="• Beschreiben Sie das Thema"></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-tools"></i> Maßnahmen</label>
+                        <textarea id="${fk}-measures" placeholder="• Maßnahmen / nächste Schritte"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-success" onclick="submitGlobalTopic()"><i class="fas fa-plus-circle"></i> Hinzufügen</button>
+                        <button class="btn" onclick="switchSubTab(document.querySelectorAll('#main-tab-global-themen .sub-tab-button')[0],'global-themen-list','main-tab-global-themen')"><i class="fas fa-times"></i> Abbrechen</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.submitGlobalTopic = function() {
+            const fk = 'global-topic-form';
+            const title = document.getElementById(fk+'-title')?.value.trim();
+            const horizon = document.getElementById(fk+'-horizon')?.value;
+            const category = document.getElementById(fk+'-category')?.value;
+            const desc = document.getElementById(fk+'-desc')?.value.trim();
+            if (!title || !horizon || !category || !desc) { toast('Bitte alle Pflichtfelder ausfüllen', 'error'); return; }
+
+            globalTopics.push({
+                id: genId(), created_at: new Date().toISOString(), status: 'open',
+                title, horizon, category,
+                start_date: document.getElementById(fk+'-startdate')?.value,
+                target_date: document.getElementById(fk+'-targetdate')?.value,
+                progress: parseInt(document.getElementById(fk+'-progress')?.value||'0'),
+                description: desc,
+                measures: document.getElementById(fk+'-measures')?.value.trim(),
+                images: []
+            });
+
+            renderGlobalTopicsView();
+            renderGlobalNewTopicForm();
+            autoSaveGlobal();
+            toast('Globales Thema hinzugefügt!');
+            const tabDiv = document.getElementById('main-tab-global-themen');
+            if (tabDiv) { const firstBtn = tabDiv.querySelector('.sub-tab-button'); if (firstBtn) firstBtn.click(); }
+        };
+
+        // ==================== GLOBAL RENDER ====================
+        function renderGlobalIncidents() {
+            const container = document.getElementById('subtab-global-list');
+            if (!container) return;
+            if (!globalIncidents.length) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-folder-open"></i><p>Keine globalen Vorfälle vorhanden</p></div>`;
+                return;
+            }
+            const sorted = [...globalIncidents].sort((a,b) => new Date(b.created_at)-new Date(a.created_at));
+            let html = '<div class="incident-grid">';
+            sorted.forEach(inc => {
+                const sc = inc.status === 'closed' ? 'closed' : '';
+                html += `
+                    <div class="incident-card">
+                        <div class="card-header">
+                            <div class="card-badges">
+                                <span class="badge badge-category">${escapeHtml(inc.category)}</span>
+                                <span class="badge badge-method"><i class="fas fa-ruler"></i> ${escapeHtml(inc.inspection_method)}</span>
+                                <span class="badge badge-status ${sc}">${inc.status === 'open' ? '🟢 Offen' : '🔴 Geschlossen'}</span>
+                            </div>
+                            <div class="card-date"><i class="far fa-calendar-alt"></i> ${formatDate(inc.created_at)}</div>
+                        </div>
+                        <div class="card-content" onclick="openGlobalIncident('${inc.id}')">
+                            ${inc.machine_number ? `<div class="info-row"><span class="info-label">Gerät-ID:</span><span class="info-value">${escapeHtml(inc.machine_number)}</span></div>` : ''}
+                            ${inc.order_number ? `<div class="info-row"><span class="info-label">Prüfauftrag:</span><span class="info-value">${escapeHtml(inc.order_number)}</span></div>` : ''}
+                            <div class="info-row"><span class="info-label">Bereich:</span><span class="info-value">${escapeHtml(inc.process)}</span></div>
+                            <div class="info-row"><span class="info-label">Problem:</span><span class="info-value">${escapeHtml((inc.problem_description||'').substring(0,100))}...</span></div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="action-button view" onclick="openGlobalIncident('${inc.id}')"><i class="fas fa-eye"></i> Details</button>
+                            ${inc.status === 'open'
+                                ? `<button class="action-button close-btn" onclick="globalCloseIncident('${inc.id}')"><i class="fas fa-check"></i> Fertig</button>`
+                                : `<button class="action-button reopen" onclick="globalReopenIncident('${inc.id}')"><i class="fas fa-undo"></i> Öffnen</button>`}
+                            <button class="action-button delete" onclick="globalDeleteIncident('${inc.id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        window.openGlobalIncident = function(id) {
+            const inc = globalIncidents.find(i => i.id == id); if (!inc) return;
+            showIncidentDetail(inc, null);
+        };
+        window.globalCloseIncident = function(id) {
+            const inc = globalIncidents.find(i => i.id == id); if (!inc) return;
+            inc.status = 'closed'; renderGlobalIncidents(); autoSaveGlobal(); toast('Vorfall geschlossen.');
+        };
+        window.globalReopenIncident = function(id) {
+            const inc = globalIncidents.find(i => i.id == id); if (!inc) return;
+            inc.status = 'open'; renderGlobalIncidents(); autoSaveGlobal(); toast('Vorfall wieder geöffnet.');
+        };
+        window.globalDeleteIncident = function(id) {
+            showConfirm('Vorfall löschen?', 'Soll dieser globale Vorfall gelöscht werden?', () => {
+                globalIncidents = globalIncidents.filter(i => i.id != id);
+                renderGlobalIncidents();
+                autoSaveGlobal();
+                toast('Vorfall gelöscht.');
+            });
+        };
+
+        function renderGlobalTopicsView() {
+            const container = document.getElementById('subtab-global-themen-list');
+            if (!container) return;
+            if (!globalTopics.length) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-folder-open"></i><p>Keine globalen Themen vorhanden</p></div>`;
+                return;
+            }
+            const sorted = [...globalTopics].sort((a,b) => new Date(b.created_at)-new Date(a.created_at));
+            let html = '<div class="incident-grid">';
+            sorted.forEach(t => {
+                const sc = t.status === 'closed' ? 'closed' : '';
+                const hBadge = t.horizon === 'langfristig' ? 'badge-long' : (t.horizon === 'kurzfristig' ? 'badge-short' : 'badge-audit');
+                const hIcon = t.horizon === 'langfristig' ? '🌿' : (t.horizon === 'kurzfristig' ? '⚡' : '📋');
+                html += `
+                    <div class="incident-card">
+                        <div class="card-header">
+                            <div class="card-badges">
+                                <span class="badge ${hBadge}">${hIcon} ${escapeHtml(t.horizon)}</span>
+                                <span class="badge badge-category">${escapeHtml(t.category)}</span>
+                                <span class="badge badge-status ${sc}">${t.status === 'open' ? '🟢 Offen' : '🔴 Geschlossen'}</span>
+                            </div>
+                        </div>
+                        <div class="card-content" onclick="openGlobalTopic('${t.id}')">
+                            <h3 style="margin-bottom:10px;font-size:16px;">${escapeHtml(t.title)}</h3>
+                            <div class="info-row"><span class="info-label">Beschreibung:</span><span class="info-value">${escapeHtml((t.description||'').substring(0,100))}...</span></div>
+                            <div class="progress-bar" style="margin-top:8px"><div class="progress-fill" style="width:${t.progress||0}%"></div></div>
+                            <div style="font-size:12px;color:var(--text-secondary);margin-top:4px">${t.progress||0}%</div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="action-button view" onclick="openGlobalTopic('${t.id}')"><i class="fas fa-eye"></i> Details</button>
+                            ${t.status === 'open'
+                                ? `<button class="action-button close-btn" onclick="globalCloseTopic('${t.id}')"><i class="fas fa-check"></i> Fertig</button>`
+                                : `<button class="action-button reopen" onclick="globalReopenTopic('${t.id}')"><i class="fas fa-undo"></i> Öffnen</button>`}
+                            <button class="action-button delete" onclick="globalDeleteTopic('${t.id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        window.openGlobalTopic = function(id) {
+            const t = globalTopics.find(t => t.id == id); if (!t) return;
+            showTopicDetail(t, null);
+        };
+        window.globalCloseTopic = function(id) {
+            const t = globalTopics.find(t => t.id == id); if (!t) return;
+            t.status = 'closed'; renderGlobalTopicsView(); autoSaveGlobal(); toast('Thema geschlossen.');
+        };
+        window.globalReopenTopic = function(id) {
+            const t = globalTopics.find(t => t.id == id); if (!t) return;
+            t.status = 'open'; renderGlobalTopicsView(); autoSaveGlobal(); toast('Thema wieder geöffnet.');
+        };
+        window.globalDeleteTopic = function(id) {
+            showConfirm('Thema löschen?', 'Soll dieses globale Thema gelöscht werden?', () => {
+                globalTopics = globalTopics.filter(t => t.id != id);
+                renderGlobalTopicsView();
+                autoSaveGlobal();
+                toast('Thema gelöscht.');
+            });
+        };
+
+        // ==================== CONFIRM MODAL ====================
+        window.showConfirm = function(title, message, callback) {
+            document.getElementById('confirmTitle').innerHTML = `<i class="fas fa-question-circle"></i> ${escapeHtml(title)}`;
+            document.getElementById('confirmMessage').textContent = message;
+            pendingDeleteCallback = callback;
+            document.getElementById('confirmModal').classList.add('active');
+        };
+        window.closeConfirmModal = function() {
+            document.getElementById('confirmModal').classList.remove('active');
+            pendingDeleteCallback = null;
+        };
+        document.getElementById('confirmYesBtn').onclick = function() {
+            if (pendingDeleteCallback) pendingDeleteCallback();
+            closeConfirmModal();
+        };
+
+        // ==================== PASSWORD MODAL ====================
+        window.closePasswordModal = function() { document.getElementById('passwordModal').classList.remove('active'); };
+        window.checkPasswordAndDelete = function() {
+            const pw = document.getElementById('passwordInput').value;
+            if (pw !== SUPERVISOR_PASSWORD) {
+                document.getElementById('passwordError').classList.add('show');
+                return;
+            }
+            closePasswordModal();
+        };
+
+        // ==================== HTML ESCAPE ====================
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+        }
+        function escapeAttr(str) {
+            if (str === null || str === undefined) return '';
+            return String(str).replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+        }
+
+        // ==================== GLOBAL FILE SAVE / LOAD ====================
+        let globalFileHandle = null;
+
+        window.saveGlobalData = async function() {
+            showLoading();
+            try {
+                const dataToSave = { version: '2.0', type: 'global', incidents: globalIncidents, topics: globalTopics, lastUpdated: new Date().toISOString() };
+                const blob = new Blob([JSON.stringify(dataToSave, null, 2)], { type: 'application/json' });
+                if ('showSaveFilePicker' in window) {
+                    if (!globalFileHandle) {
+                        globalFileHandle = await window.showSaveFilePicker({ suggestedName: 'zfp_global.json', types: [{ description: 'JSON Datei', accept: { 'application/json': ['.json'] } }] });
+                    }
+                    const writable = await globalFileHandle.createWritable();
+                    await writable.write(blob); await writable.close();
+                } else {
+                    const url = URL.createObjectURL(blob); const a = document.createElement('a');
+                    a.href = url; a.download = 'zfp_global.json';
+                    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+                }
+                hideLoading(); toast('Globale Daten gespeichert!'); updateBarGlobal();
+            } catch(err) { hideLoading(); if (err.name !== 'AbortError') { toast('Fehler: ' + err.message, 'error'); } }
+        };
+
+        window.loadGlobalData = async function() {
+            showLoading();
+            try {
+                let file, handle;
+                if ('showOpenFilePicker' in window) {
+                    try { [handle] = await window.showOpenFilePicker({ types: [{ description: 'PMU Global JSON', accept: { 'application/json': ['.json'] } }] }); }
+                    catch(e) { hideLoading(); return; }
+                    file = await handle.getFile();
+                } else {
+                    file = await new Promise(resolve => {
+                        const input = document.createElement('input'); input.type = 'file'; input.accept = '.json';
+                        input.onchange = e => resolve(e.target.files[0]); input.oncancel = () => resolve(null); input.click();
+                    });
+                    if (!file) { hideLoading(); return; }
+                }
+                const data = JSON.parse(await file.text());
+                if (data.type !== 'global') { hideLoading(); toast('Das ist keine globale Datei! Mitarbeiter-Dateien bitte über "Dateien laden" öffnen.', 'error'); return; }
+                globalIncidents = data.incidents || []; globalTopics = data.topics || [];
+                if (handle) globalFileHandle = handle;
+                renderGlobalIncidents(); renderGlobalTopicsView();
+                hideLoading();
+                toast('✅ Globale Daten geladen: ' + globalIncidents.length + ' Vorfälle, ' + globalTopics.length + ' Themen');
+                updateBarGlobal();
+            } catch(err) { hideLoading(); if (err.name !== 'AbortError') { toast('Fehler: ' + err.message, 'error'); } }
+        };
+
+        async function autoSaveGlobal() {
+            if (!globalFileHandle) return;
+            try {
+                const blob = new Blob([JSON.stringify({ version:'2.0', type:'global', incidents:globalIncidents, topics:globalTopics, lastUpdated:new Date().toISOString() }, null, 2)], { type:'application/json' });
+                const writable = await globalFileHandle.createWritable(); await writable.write(blob); await writable.close();
+            } catch(e) { console.warn('Global auto-save failed', e); }
+        }
+
+        // ==================== INIT ====================
+        function init() {
+            globalIncidents = []; globalTopics = [];
+            renderGlobalIncidents(); renderGlobalNewIncidentForm();
+            renderGlobalTopicsView(); renderGlobalNewTopicForm();
+            switchMainTab('global');
+            updateBarGlobal();
+            updateBarUser(null);
+        }
+
+        init();
+    })();
+    </script>
+</body>
+</html>
